@@ -120,6 +120,12 @@ class Repository(XMLModel, ReferenceModel, IdentifierModel):
 
 
 class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
+    """
+    
+    https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html
+
+    Help text for fields frequently draws on the text if this document.
+    """
     repository = models.ForeignKey(
         Repository, 
         default=None, 
@@ -136,6 +142,9 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
     height = models.PositiveIntegerField(default=None, blank=True, null=True, help_text="The measurement of the manuscript leaves in millimetres along the axis parallel to its bottom, e.g. perpendicular to the spine of a book or codex.")
     width = models.PositiveIntegerField(default=None, blank=True, null=True, help_text="The measurement in millimetres leaves along the axis at a right angle to the bottom of the manuscript.")
     dimensions_description = models.CharField(max_length=255, default="", blank=True, help_text="A description of the dimensions of the leaves which can be used if the basic height and width values are not sufficient.")
+    collation = models.CharField(max_length=255, default="", blank=True, help_text="A description of the arrangement of the leaves and quires of the manuscript.")
+    foliation = models.CharField(max_length=255, default="", blank=True, help_text="The scheme, medium or location of folio, page, column, or line numbers written in the manuscript, frequently including a statement about when and, if known, by whom, the numbering was done.")
+    condition = models.CharField(max_length=255, default="", blank=True, help_text="A summary of the overall physical state of a manuscript, in particular where such information is not recorded elsewhere in the description.")
 
     class Meta:
         ordering = ["repository","identifier"]
@@ -169,17 +178,15 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
         if len(contents):
             root.append( contents )
 
-        #######################
+        #########################
         ## Physical Description
-        #######################
-
-        # Create elements
+        #########################
         physical_description = etree.Element("physDesc")
         object_description = etree.Element("objectDesc")
+
+        ## Extent ##
         extent = etree.Element("extent")
         dimensions = etree.Element("dimensions", unit="mm")
-
-        # Fill out values
         if self.height:
             etree.SubElement(dimensions, "height").text = str(self.height)
         if self.width:
@@ -190,13 +197,22 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
             extent.text = self.extent_description
         if self.extent_numeric:
             etree.SubElement(extent, "measure", unit="leaf", quantity=str(self.extent_numeric))
-
-        # Build tree
         if len(dimensions) or dimensions.text:
             extent.append( dimensions )
-
         if len(extent) or extent.text:
             object_description.append( extent )
+
+        ## Collation ##
+        if self.collation:
+            etree.SubElement(etree.SubElement(object_description, "collation"), "p").text = self.collation
+
+        ## Foliation ##
+        if self.foliation:
+            etree.SubElement(etree.SubElement(object_description, "foliation"), "p").text = self.foliation
+
+        ## Condition ##
+        if self.condition:
+            etree.SubElement(etree.SubElement(object_description, "condition"), "p").text = self.condition
 
         if len(object_description):
             physical_description.append( object_description )
