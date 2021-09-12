@@ -65,13 +65,10 @@ class RepositoryForm(forms.ModelForm):
         self.helper.layout = Layout(
             "identifier",
             "url",
-            "location_description",
-            Row(Column("latitude"), Column("longitude")),
-            # "contact_name",
-            # Row(Column("phone"), Column("email")),
+            Row(Column("location_description"), Column("settlement"), css_class='form-row'),
+            Row(Column("latitude"), Column("longitude"), css_class='form-row'),
             submit_buttons(),
         )
-
 
 # class InfoForm(SuperModelForm):
 #     class Meta:

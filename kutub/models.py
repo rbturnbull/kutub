@@ -80,9 +80,6 @@ class Repository(XMLModel, ReferenceModel, IdentifierModel):
         help_text="The longitude coordinate of this repository (in decimals).",
         validators=[MinValueValidator(-180), MaxValueValidator(180)],
     )
-    # contact_name = models.CharField(max_length=255, default="", blank=True, help_text="The name of a contact at this location.")
-    # phone = models.CharField(max_length=255, default="", blank=True, help_text="A contact phone number.")
-    # email = models.CharField(max_length=255, default="", blank=True, help_text="A contact email address.")
 
     class Meta:
         ordering = ["identifier"]
