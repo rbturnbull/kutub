@@ -11,4 +11,14 @@
   <msContents>
     <summary>Aeneas Silvius Piccolomini De Liberorum Educatione</summary>
   </msContents>
+  <physDesc>
+    <objectDesc>
+      <extent>
+        <dimensions unit="mm">
+          <height>228</height>
+          <width>165</width>
+        </dimensions>
+      </extent>
+    </objectDesc>
+  </physDesc>
 </msDesc>

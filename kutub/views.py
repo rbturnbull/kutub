@@ -63,3 +63,38 @@ class AllRepositoriesMapView(TemplateView):
     template_name = "kutub/all_repositories_map.html"
 
 
+
+######################## 
+##      Manuscript
+######################## 
+
+class ManuscriptView(PermissionRequiredMixin):
+    model = models.Manuscript
+    permission_required = "kutub.view_manuscript"
+
+
+class ManuscriptListView(ManuscriptView, ListView):
+    paginate_by = PAGINATION
+    extra_context = dict(title="Manuscript List")
+
+
+class ManuscriptDetailView(TitleFromObjectMixin, ManuscriptView, DetailView):
+    pass
+
+
+class ManuscriptIIIFManifestView(ManuscriptDetailView):
+    template_name = "kutub/iiif_manifest.html"
+
+
+class ManuscriptUpdateView(TitleFromObjectMixin, RevisionMixin, ManuscriptView, UpdateView):
+    permission_required = "kutub.update_manuscript"
+    form_class = forms.ManuscriptForm
+    template_name = "kutub/manuscript_form.html"
+    extra_context = dict(form_title="Update Manuscript")
+
+
+class ManuscriptCreateView(RevisionMixin, ManuscriptView, CreateView):
+    permission_required = "kutub.add_manuscript"
+    form_class = forms.ManuscriptForm
+    template_name = "kutub/manuscript_form.html"
+    extra_context = dict(form_title="Add Manuscript")

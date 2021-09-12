@@ -1,0 +1,15 @@
+{% load widget_tweaks %}
+
+<div class="field">
+    {% if label %}
+        <label for="{{ field.id_for_label }}">{{ label }}</label>
+    {% else %}
+        {{ field.label_tag }}
+    {% endif %}
+    <br>
+    {% render_field field class+="form-control" %}
+    <small class='help-text form-text text-muted'>{{ field.help_text }}</small>
+    {% if field.errors %}
+        <span>{{ field.errors|striptags }}</span>
+    {% endif %}
+</div>

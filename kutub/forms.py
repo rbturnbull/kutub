@@ -100,10 +100,10 @@ class RepositoryForm(forms.ModelForm):
 # )
 
 
-# class DocumentForm(SuperModelForm):
-#     infos = InlineFormSetField(formset_class=InfoFormSet)
-#     content = InlineFormSetField(formset_class=ContentFormSet)
-#     class Meta:
-#         fields = "__all__"
-#         model = models.Document
+class ManuscriptForm(SuperModelForm):
+    # infos = InlineFormSetField(formset_class=InfoFormSet)
+    # content = InlineFormSetField(formset_class=ContentFormSet)
+    class Meta:
+        fields = "__all__"
+        model = models.Manuscript
 

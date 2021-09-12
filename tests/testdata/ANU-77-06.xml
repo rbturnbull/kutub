@@ -11,4 +11,14 @@
   <msContents>
     <summary>Cicero, Epistulae ad familiares. Latin</summary>
   </msContents>
+  <physDesc>
+    <objectDesc>
+      <extent>
+        <dimensions unit="mm">
+          <height>292</height>
+          <width>200</width>
+        </dimensions>
+      </extent>
+    </objectDesc>
+  </physDesc>
 </msDesc>

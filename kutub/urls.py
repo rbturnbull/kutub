@@ -19,15 +19,15 @@ urlpatterns = [
     path("repositories/<str:slug>/update/", views.RepositoryUpdateView.as_view(), name="repository-update"),
     path("repositories/<str:slug>/", views.RepositoryDetailView.as_view(), name="repository-detail"),
 
-    # path("", views.DocumentListView.as_view(), name="index"),
-    # path("documents/", views.DocumentListView.as_view(), name="document-list"),
-    # path("documents/create/", views.DocumentCreateView.as_view(), name="document-create"),
-    # path("documents/<str:slug>/", views.DocumentDetailView.as_view(), name="document-detail"),
-    # path("documents/<str:slug>/iiif/", views.DocumentIIIFManifestView.as_view(), name="document-iiif"),
-    # path("documents/<str:slug>/update/", views.DocumentUpdateView.as_view(), name="document-update"),
+    path("", views.ManuscriptListView.as_view(), name="index"),
+    path("mss/", views.ManuscriptListView.as_view(), name="manuscript-list"),
+    path("mss/create/", views.ManuscriptCreateView.as_view(), name="manuscript-create"),
+    path("mss/<str:slug>/", views.ManuscriptDetailView.as_view(), name="manuscript-detail"),
+    path("mss/<str:slug>/iiif/", views.ManuscriptIIIFManifestView.as_view(), name="manuscript-iiif"),
+    path("mss/<str:slug>/update/", views.ManuscriptUpdateView.as_view(), name="manuscript-update"),
 
-    # path("tags/", views.DocumentTagListView.as_view(), name="documenttag-list"),
-    # path("tags/<str:slug>/", views.DocumentTagDetailView.as_view(), name="documenttag-detail"),
+    # path("tags/", views.ManuscriptTagListView.as_view(), name="documenttag-list"),
+    # path("tags/<str:slug>/", views.ManuscriptTagDetailView.as_view(), name="documenttag-detail"),
 
     # path("info/", views.InfoCategoryListView.as_view(), name="infocategory-list"),
     # path("info/<str:slug>/", views.InfoCategoryDetailView.as_view(), name="infocategory-detail"),

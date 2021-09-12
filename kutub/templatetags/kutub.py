@@ -45,12 +45,12 @@ def range(value):
         return f"{value.lower}–{value.upper}" if value.upper else str(value.lower)
     return ""
 
-@register.filter(name='size')
-def size(document):
-    if document.width:
-        if document.height:
-            return f"{ range(document.width) } ✖️ {range(document.height)} mm"
-        return f"Width: { range(document.width) } mm"
-    if document.height:
-        return f"Height: {range(document.height)} mm"
+@register.filter(name='dimensions')
+def dimensions(manuscript):
+    if manuscript.width:
+        if manuscript.height:
+            return f"{ range(manuscript.width) } ✖️ {range(manuscript.height)} mm"
+        return f"Width: { range(manuscript.width) } mm"
+    if manuscript.height:
+        return f"Height: {range(manuscript.height)} mm"
     return ""

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% load static i18n compress kutub %}
+
+{% block content %}
+
+<div class="container">
+  <div class="float-right">
+    {% if perms.kutub.add_manuscript %}
+    <a href="{% url 'kutub:manuscript-create'  %}" class="btn btn-outline-primary btn-sm chk-saved"
+      data-toggle="tooltip" data-placement="bottom" title="Add Manuscript">
+      <i class="fas fa-plus"></i>
+    </a>
+    {% endif %}
+  </div>
+
+  <h2>Manuscripts</h2>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Manuscript</th>
+        <th scope="col">Repository</th>
+        <th scope="col">Date <span style='font-variant: small-caps;'>ce</span></th>
+        <th scope="col">Languages</th>
+        <th scope="col">Scripts</th>
+        <th scope="col">Dimensions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for manuscript in page_obj %}
+      <tr>
+        <th scope="row"><a href="{{ manuscript.get_absolute_url }}">{{ manuscript }}</a></th>
+        <td><a href="{{ manuscript.collection.get_absolute_url }}">{{ manuscript.collection }}</a></td>
+        <td>{{ manuscript.date|range }}</td>
+        <td>
+          {% for language in manuscript.languages.all %}
+          <a href='{{language.get_absolute_url}}' class="badge badge-primary">{{language}}</a>
+          {% endfor %}
+        </td>
+        <td>
+          {% for script in manuscript.scripts.all %}
+          <a href='{{script.get_absolute_url}}' class="badge badge-primary">{{script}}</a>
+          {% endfor %}
+        </td>
+        <td>{{ manuscript|dimensions }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

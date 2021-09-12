@@ -131,7 +131,9 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
     identifier = models.CharField(max_length=255, help_text="The identifier of the manuscript.")
     alt_identifier = models.CharField(max_length=255, default="", blank=True, help_text="An alternative identifier of the manuscript.")
     content_summary = models.CharField(max_length=1023, default="", blank=True, help_text="A summary of the intellectual content in this manuscript. More details can be added below.")
-
+    height = models.PositiveIntegerField(default=None, blank=True, null=True, help_text="The measurement of the manuscript leaves in millimetres along the axis parallel to its bottom, e.g. perpendicular to the spine of a book or codex.")
+    width = models.PositiveIntegerField(default=None, blank=True, null=True, help_text="The measurement in millimetres leaves along the axis at a right angle to the bottom of the manuscript.")
+    dimensions_description = models.CharField(max_length=255, default="", blank=True, help_text="A description of the dimensions of the leaves which can be used if the basic height and width values are not sufficient.")
 
     class Meta:
         ordering = ["repository","identifier"]
@@ -168,9 +170,30 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
         #######################
         ## Physical Description
         #######################
-        physical_description = etree.Element("physDesc")
 
-        # objectDesc
+        # Create elements
+        physical_description = etree.Element("physDesc")
+        object_description = etree.Element("objectDesc")
+        extent = etree.Element("extent")
+        dimensions = etree.Element("dimensions", unit="mm")
+
+        # Fill out values
+        if self.height:
+            etree.SubElement(dimensions, "height").text = str(self.height)
+        if self.width:
+            etree.SubElement(dimensions, "width").text = str(self.width)
+        if self.dimensions_description:
+            dimensions.text = self.dimensions_description
+
+        # Build tree
+        if len(dimensions) or dimensions.text:
+            extent.append( dimensions )
+
+        if len(extent):
+            object_description.append( extent )
+
+        if len(object_description):
+            physical_description.append( object_description )
 
         if len(physical_description):
             root.append( physical_description )
