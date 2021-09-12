@@ -55,7 +55,8 @@ class RepositoryTests(TestCase):
         self.assertEqual(
             repository.xml_string(),
             b'<repository><name>Repository Name</name><location><settlement>Settlement</settlement></location></repository>',
-        )                                
+        )        
+
 
 
 class ManuscriptTests(TestCase):
@@ -67,6 +68,17 @@ class ManuscriptTests(TestCase):
             manuscript.xml_string(),
             b'<msDesc><msIdentifier><idno>Shelfmark</idno></msIdentifier></msDesc>',
         )
+
+    def test_tei_extent(self):
+        manuscript = models.Manuscript.objects.create(
+            identifier="Shelfmark",
+            extent_numeric=10,
+            extent_description="iii + 7",
+        )
+        self.assertEqual(
+            manuscript.xml_string(),
+            b'<msDesc><msIdentifier><idno>Shelfmark</idno></msIdentifier><physDesc><objectDesc><extent>iii + 7<measure unit="leaf" quantity="10"/></extent></objectDesc></physDesc></msDesc>',
+        )                                
 
     def test_tei_repository(self):
         repository = models.Repository.objects.create(

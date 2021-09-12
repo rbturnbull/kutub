@@ -38,6 +38,7 @@ def import_europa_inventa(manuscripts_csv_path):
                 identifier=row['library_ref'],
                 alt_identifier=row['library_ref_alt'],
                 content_summary=row['name'],
+                extent_description=row['extent'],
                 width=width,
                 height=height,
             )
