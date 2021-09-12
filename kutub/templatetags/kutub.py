@@ -43,7 +43,7 @@ def range(value):
 def dimensions(manuscript):
     if manuscript.width:
         if manuscript.height:
-            return f"{ manuscript.width } ✖️ {manuscript.height} mm"
+            return f"{ manuscript.height } ✖️ {manuscript.width} mm"
         return f"Width: { manuscript.width } mm"
     if manuscript.height:
         return f"Height: {manuscript.height} mm"

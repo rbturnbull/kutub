@@ -140,6 +140,7 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
     identifier = models.CharField(max_length=255, help_text="The identifier of the manuscript.")
     alt_identifier = models.CharField(max_length=255, default="", blank=True, help_text="An alternative identifier of the manuscript.")
     content_summary = DescriptionField(help_text="A summary of the intellectual content in this manuscript. More details can be added below.")
+    support_description = DescriptionField(help_text="A description of the physical support for the written part of a manuscript.")    
     extent_numeric = models.PositiveIntegerField(default=None, null=True, blank=True, help_text="The number of leaves in the manuscript as an integer.")
     extent_description = DescriptionField(help_text="A description of the number of leaves in the manuscript.")
     height = models.PositiveIntegerField(default=None, blank=True, null=True, help_text="The measurement of the manuscript leaves in millimetres along the axis parallel to its bottom, e.g. perpendicular to the spine of a book or codex.")
@@ -196,6 +197,10 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
         
         # Object Description #
         object_description = etree.Element("objectDesc")
+
+        ## Support ##
+        if self.support_description:
+            etree.SubElement(etree.SubElement(object_description, "supportDesc"), "p").text = self.support_description
 
         ## Extent ##
         extent = etree.Element("extent")

@@ -27,7 +27,7 @@ def import_europa_inventa(manuscripts_csv_path):
             dimensions_description = ""
             if m := re.match(r'(\d+) x (\d+) mm', row['dimensions']):
                 height, width = int(m.group(1)), int(m.group(2))
-            if m := re.match(r'(\d+\.?\d*) x (\d+\.?\d*) cm', row['dimensions']):
+            elif m := re.match(r'(\d+\.?\d*) x (\d+\.?\d*) cm', row['dimensions']):
                 height, width = int(float(m.group(1)) * 10), int(float(m.group(2)) * 10)
             elif not row['dimensions']:
                 height, width = None, None                
@@ -39,6 +39,7 @@ def import_europa_inventa(manuscripts_csv_path):
                 identifier=row['library_ref'],
                 alt_identifier=row['library_ref_alt'],
                 content_summary=row['name'],
+                support_description=row['support'],
                 extent_description=row['extent'],
                 width=width,
                 height=height,

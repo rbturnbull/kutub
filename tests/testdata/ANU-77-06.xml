@@ -13,8 +13,14 @@
   </msContents>
   <physDesc>
     <objectDesc>
+      <supportDesc>
+        <p>Vellum</p>
+      </supportDesc>
       <extent>
-        <dimensions unit="mm">292 x 200 mm<height>292</height><width>200</width></dimensions>
+        <dimensions unit="mm">
+          <height>292</height>
+          <width>200</width>
+        </dimensions>
       </extent>
       <collation>
         <p>A + B + 190 + C + D</p>
