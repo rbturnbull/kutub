@@ -17,6 +17,7 @@ def import_europa_inventa(manuscripts_csv_path):
     with open(manuscripts_csv_path, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
+            print( f"{row['repository']} {row['library_ref']}")
             repository, _ = models.Repository.objects.update_or_create(
                 settlement=clean_settlement(row['settlement']),
                 identifier=row['repository'],
@@ -42,6 +43,7 @@ def import_europa_inventa(manuscripts_csv_path):
                 width=width,
                 height=height,
                 collation=row['collation'],
+                catchwords=row['catchwords'],
                 foliation=row['foliation'],
                 condition=row['condition'],
             )

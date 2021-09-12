@@ -31,8 +31,8 @@
       {% for manuscript in page_obj %}
       <tr>
         <th scope="row"><a href="{{ manuscript.get_absolute_url }}">{{ manuscript }}</a></th>
-        <td><a href="{{ manuscript.collection.get_absolute_url }}">{{ manuscript.collection }}</a></td>
-        <td>{{ manuscript.date|range }}</td>
+        <td><a href="{{ manuscript.repository.get_absolute_url }}">{{ manuscript.repository }}</a></td>
+        <td>{{ manuscript.date }}</td>
         <td>
           {% for language in manuscript.languages.all %}
           <a href='{{language.get_absolute_url}}' class="badge badge-primary">{{language}}</a>

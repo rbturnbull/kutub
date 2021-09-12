@@ -138,13 +138,14 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
     alt_identifier = models.CharField(max_length=255, default="", blank=True, help_text="An alternative identifier of the manuscript.")
     content_summary = models.CharField(max_length=1023, default="", blank=True, help_text="A summary of the intellectual content in this manuscript. More details can be added below.")
     extent_numeric = models.PositiveIntegerField(default=None, null=True, blank=True, help_text="The number of leaves in the manuscript as an integer.")
-    extent_description = models.CharField(max_length=255, default="", blank=True, help_text="A description of the number of leaves in the manuscript.")
+    extent_description = models.CharField(max_length=1023, default="", blank=True, help_text="A description of the number of leaves in the manuscript.")
     height = models.PositiveIntegerField(default=None, blank=True, null=True, help_text="The measurement of the manuscript leaves in millimetres along the axis parallel to its bottom, e.g. perpendicular to the spine of a book or codex.")
     width = models.PositiveIntegerField(default=None, blank=True, null=True, help_text="The measurement in millimetres leaves along the axis at a right angle to the bottom of the manuscript.")
-    dimensions_description = models.CharField(max_length=255, default="", blank=True, help_text="A description of the dimensions of the leaves which can be used if the basic height and width values are not sufficient.")
-    collation = models.CharField(max_length=255, default="", blank=True, help_text="A description of the arrangement of the leaves and quires of the manuscript.")
-    foliation = models.CharField(max_length=255, default="", blank=True, help_text="The scheme, medium or location of folio, page, column, or line numbers written in the manuscript, frequently including a statement about when and, if known, by whom, the numbering was done.")
-    condition = models.CharField(max_length=255, default="", blank=True, help_text="A summary of the overall physical state of a manuscript, in particular where such information is not recorded elsewhere in the description.")
+    dimensions_description = models.CharField(max_length=1023, default="", blank=True, help_text="A description of the dimensions of the leaves which can be used if the basic height and width values are not sufficient.")
+    collation = models.CharField(max_length=1023, default="", blank=True, help_text="A description of the arrangement of the leaves and quires of the manuscript.")
+    catchwords = models.CharField(max_length=1023, default="", blank=True, help_text="The system used to ensure correct ordering of the quires or similar making up a manuscript, typically by means of annotations at the foot of the page.")
+    foliation = models.CharField(max_length=1023, default="", blank=True, help_text="The scheme, medium or location of folio, page, column, or line numbers written in the manuscript, frequently including a statement about when and, if known, by whom, the numbering was done.")
+    condition = models.CharField(max_length=1023, default="", blank=True, help_text="A summary of the overall physical state of a manuscript, in particular where such information is not recorded elsewhere in the description.")
 
     class Meta:
         ordering = ["repository","identifier"]
@@ -203,9 +204,14 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
             object_description.append( extent )
 
         ## Collation ##
+        collation = etree.Element("collation")
         if self.collation:
-            etree.SubElement(etree.SubElement(object_description, "collation"), "p").text = self.collation
-
+            etree.SubElement(collation, "p").text = self.collation
+        if self.catchwords:
+            etree.SubElement(collation, "catchwords").text = self.catchwords
+        if len(collation):
+            object_description.append( collation )
+            
         ## Foliation ##
         if self.foliation:
             etree.SubElement(etree.SubElement(object_description, "foliation"), "p").text = self.foliation

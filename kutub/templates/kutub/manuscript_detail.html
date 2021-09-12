@@ -49,16 +49,16 @@
                 <tr><th scope="row">IIIF Manifest</th><td><a href='{{ manuscript.iiif_manifest_url }}'>{{ manuscript.iiif_manifest_url }}</a></td></tr>
             {% endif %}
             {% if manuscript.date %}
-                <tr><th scope="row">Date</th><td>{{ manuscript.date|range }} <span style='font-variant: small-caps;'>ce</span></td></tr>
+                <tr><th scope="row">Date</th><td>{{ manuscript.date }} <span style='font-variant: small-caps;'>ce</span></td></tr>
             {% endif %}
             {% if manuscript.provenance %}
                 <tr><th scope="row">Provenance</th><td>{{ manuscript.provenance }}</td></tr>
             {% endif %}
             {% if manuscript.width %}
-                <tr><th scope="row">Width</th><td>{{ manuscript.width|range }} mm</td></tr>
+                <tr><th scope="row">Width</th><td>{{ manuscript.width }} mm</td></tr>
             {% endif %}
             {% if manuscript.height %}
-                <tr><th scope="row">Height</th><td>{{ manuscript.height|range }} mm</td></tr>
+                <tr><th scope="row">Height</th><td>{{ manuscript.height }} mm</td></tr>
             {% endif %}
             {% if manuscript.tags.count %}
                 <tr>

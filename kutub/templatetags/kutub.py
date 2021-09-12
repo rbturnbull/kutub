@@ -39,18 +39,12 @@ def range(value):
         return f"{value.lower}–{value.upper}" if value.upper else str(value.lower)
     return ""
 
-@register.filter(name='range')
-def range(value):
-    if value:
-        return f"{value.lower}–{value.upper}" if value.upper else str(value.lower)
-    return ""
-
 @register.filter(name='dimensions')
 def dimensions(manuscript):
     if manuscript.width:
         if manuscript.height:
-            return f"{ range(manuscript.width) } ✖️ {range(manuscript.height)} mm"
-        return f"Width: { range(manuscript.width) } mm"
+            return f"{ manuscript.width } ✖️ {manuscript.height} mm"
+        return f"Width: { manuscript.width } mm"
     if manuscript.height:
-        return f"Height: {range(manuscript.height)} mm"
+        return f"Height: {manuscript.height} mm"
     return ""
