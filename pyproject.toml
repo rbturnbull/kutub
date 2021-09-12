@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "kutub"
+version = "0.1.0"
+description = "A Django app to create an inventory of manuscript descriptions."
+authors = ["Robert Turnbull <robert.turnbull@unimelb.edu.au>"]
+license = "Apache 2.0"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+Django = "^3.2.7"
+django-cms = "^3.9.0"
+django-publications = {git = "https://gitlab.unimelb.edu.au/rturnbull/django-publications.git"}
+lxml = "^4.6.3"
+django-next-prev = "^1.1.0"
+
+[tool.poetry.dev-dependencies]
+coverage = "^5.5"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
