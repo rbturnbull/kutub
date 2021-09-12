@@ -48,3 +48,28 @@ def dimensions(manuscript):
     if manuscript.height:
         return f"Height: {manuscript.height} mm"
     return ""
+
+@register.filter(name='help_text')
+def help_text(obj, field_name):
+    for field in obj._meta.fields:
+        if field.name == field_name:
+            return field.help_text
+    return ""
+
+@register.filter(name='help_text_tooltip')
+def help_text_tooltip(obj, field_name, placement="bottom"):
+    text = help_text(obj, field_name=field_name)
+    return mark_safe(f' data-toggle="tooltip" data-placement="{placement}" title="{text}" ')
+
+@register.inclusion_tag('kutub/attribute_row.html')
+def attribute_row(object, field_name, suffix="", header=""):
+    header = header or field_name.replace("_", " ").title()
+    return {
+        'object': object,
+        'field_name': field_name,
+        'value': getattr(object, field_name),
+        'placement': "bottom",
+        "help_text": help_text(object, field_name),
+        "suffix": suffix,
+        "header": header,
+    }

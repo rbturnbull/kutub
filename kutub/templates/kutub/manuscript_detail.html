@@ -6,137 +6,182 @@
 
 <div class="container">
 
-    <div class="float-right">
-        {% if perms.kutub.add_manuscript %}
-            <a href="{% url 'kutub:manuscript-create'  %}" class="btn btn-outline-primary btn-sm chk-saved" data-toggle="tooltip" data-placement="bottom" title="Add Document">
-                <i class="fas fa-plus"></i>
-            </a>
-        {% endif %}
-        {% if perms.kutub.update_manuscript %}
-            <a href="{{ manuscript.get_absolute_update_url }}" class="btn btn-outline-primary btn-sm chk-saved" data-toggle="tooltip" data-placement="bottom" title="Edit Document">
-                <i class="fas fa-edit"></i>
-            </a>
-        {% endif %}
-        {% if request.user.is_staff %}
-            <a href="{% url 'admin:kutub_manuscript_change' manuscript.id %}" class="btn btn-outline-primary btn-sm chk-saved" data-toggle="tooltip" data-placement="bottom" title="Admin">
-                <i class="fas fa-tools"></i>
-            </a>
-        {% endif %}
-        {% if manuscript.prev_in_order %}
-            <a href="{{ manuscript.prev_in_order.get_absolute_url }}" class="btn btn-outline-primary btn-sm chk-saved" data-toggle="tooltip" data-placement="bottom" title="{{ manuscript.prev_in_order }}">
-                <i class="fas fa-arrow-left"></i>
-            </a>
-        {% endif %}
-        {% if manuscript.next_in_order %}
-            <a href="{{ manuscript.next_in_order.get_absolute_url }}" class="btn btn-outline-primary btn-sm chk-saved" data-toggle="tooltip" data-placement="bottom" title="{{ manuscript.next_in_order }}">
-                <i class="fas fa-arrow-right"></i>
-            </a>
-        {% endif %}
-    </div>
-
-    <h1>{{ manuscript }}</h1>
-
-    <table class="table">
-        <tbody>
-            <tr><th scope="row">Repository</th><td><a href='{{ manuscript.repository.get_absolute_url }}'>{{ manuscript.repository }}</a></td></tr>
-            {% if manuscript.content_summary %}
-                <tr><th scope="row">Content Summary</th><td>{{ manuscript.content_summary }}</a></td></tr>
-            {% endif %}
-            {% if manuscript.catalogue_url %}
-                <tr><th scope="row">Catalogue URL</th><td><a href='{{ manuscript.catalogue_url }}'>{{ manuscript.catalogue_url }}</a></td></tr>
-            {% endif %}
-            {% if manuscript.iiif_manifest_url %}
-                <tr><th scope="row">IIIF Manifest</th><td><a href='{{ manuscript.iiif_manifest_url }}'>{{ manuscript.iiif_manifest_url }}</a></td></tr>
-            {% endif %}
-            {% if manuscript.date %}
-                <tr><th scope="row">Date</th><td>{{ manuscript.date }} <span style='font-variant: small-caps;'>ce</span></td></tr>
-            {% endif %}
-            {% if manuscript.provenance %}
-                <tr><th scope="row">Provenance</th><td>{{ manuscript.provenance }}</td></tr>
-            {% endif %}
-            {% if manuscript.width %}
-                <tr><th scope="row">Width</th><td>{{ manuscript.width }} mm</td></tr>
-            {% endif %}
-            {% if manuscript.height %}
-                <tr><th scope="row">Height</th><td>{{ manuscript.height }} mm</td></tr>
-            {% endif %}
-            {% if manuscript.tags.count %}
-                <tr>
-                    <th scope="row">Tags</th>
-                    <td>
-                        {% for tag in manuscript.tags.all %}
-                            <a href='{{tag.get_absolute_url}}' class="badge badge-primary">{{tag}}</a>
-                        {% endfor %}
-                    </td>
-                </tr>
-            {% endif %}
-            {% if manuscript.languages.count %}
-                <tr>
-                    <th scope="row">Languages</th>
-                    <td>
-                        {% for language in manuscript.languages.all %}
-                            <a href='{{language.get_absolute_url}}' class="badge badge-primary">{{language}}</a>
-                        {% endfor %}
-                    </td>
-                </tr>
-            {% endif %}
-            {% if manuscript.scripts.count %}
-                <tr>
-                    <th scope="row">Scripts</th>
-                    <td>
-                        {% for script in manuscript.scripts.all %}
-                            <a href='{{script.get_absolute_url}}' class="badge badge-primary">{{script}}</a>
-                        {% endfor %}
-                    </td>
-                </tr>
-            {% endif %}
-            {% if manuscript.material %}
-                <tr><th scope="row">Material</th><td>{{ manuscript.material }}</td></tr>
-            {% endif %}
-        </tbody>
-    </table>
-    
-    {% if manuscript.info_set.count %}
-        <h3>Extra Information</h3>
-        <table class="table">
-            {% for info in manuscript.info_set.all %}
-                <tr>
-                    <th scope="row"><a href='{{info.category.get_absolute_url}}'>{{ info.category }}</a></th>
-                    <td>{{ info.text }}</td></tr>
-            {% endfor %}
-        </table>
+  <div class="float-right">
+    {% if perms.kutub.add_manuscript %}
+    <a href="{% url 'kutub:manuscript-create'  %}" class="btn btn-outline-primary btn-sm chk-saved"
+      data-toggle="tooltip" data-placement="bottom" title="Add Document">
+      <i class="fas fa-plus"></i>
+    </a>
     {% endif %}
-
-    {% if manuscript.content_set.count %}
-        <h3>Contents</h3>
-        <table class="table">
-            {% for content in manuscript.content_set.all %}
-                <tr>
-                    <th scope="row">{{ content.folio_range }}</th>
-                    <td>{{ content.description }}</td></tr>
-            {% endfor %}
-        </table>
+    {% if perms.kutub.update_manuscript %}
+    <a href="{{ manuscript.get_absolute_update_url }}" class="btn btn-outline-primary btn-sm chk-saved"
+      data-toggle="tooltip" data-placement="bottom" title="Edit Document">
+      <i class="fas fa-edit"></i>
+    </a>
     {% endif %}
-
-    <h3>References</h3>
-    {% references_list manuscript %}
-
-    {% if manuscript.repository.has_coords %}
-        <h3>Location</h3>
-        {% include 'kutub/repository_map_iframe.html' with repository=manuscript.repository %}
+    {% if request.user.is_staff %}
+    <a href="{% url 'admin:kutub_manuscript_change' manuscript.id %}" class="btn btn-outline-primary btn-sm chk-saved"
+      data-toggle="tooltip" data-placement="bottom" title="Admin">
+      <i class="fas fa-tools"></i>
+    </a>
     {% endif %}
-
-    {% if manuscript.iiif_manifest_url %}
-        <h3>IIIF Presentation</h3>
-        <iframe src='{% url "kutub:manuscript-iiif" slug=manuscript.slug %}' style="width: 100%; height: 450px;">
-            {{ manuscript }}
-        </iframe>
+    {% if manuscript.prev_in_order %}
+    <a href="{{ manuscript.prev_in_order.get_absolute_url }}" class="btn btn-outline-primary btn-sm chk-saved"
+      data-toggle="tooltip" data-placement="bottom" title="{{ manuscript.prev_in_order }}">
+      <i class="fas fa-arrow-left"></i>
+    </a>
     {% endif %}
-
-    {% if manuscript.placeholder %}
-        <h2>Notes</h2>
-        {% render_placeholder manuscript.placeholder %}
+    {% if manuscript.next_in_order %}
+    <a href="{{ manuscript.next_in_order.get_absolute_url }}" class="btn btn-outline-primary btn-sm chk-saved"
+      data-toggle="tooltip" data-placement="bottom" title="{{ manuscript.next_in_order }}">
+      <i class="fas fa-arrow-right"></i>
+    </a>
     {% endif %}
+  </div>
+
+  <h1>{{ manuscript }}</h1>
+
+  <table class="table">
+    <tbody>
+      <tr>
+        <th scope="row">Repository</th>
+        <td><a href='{{ manuscript.repository.get_absolute_url }}'>{{ manuscript.repository }}</a></td>
+      </tr>
+      {% if manuscript.content_summary %}
+      <tr>
+        <th scope="row">Content Summary</th>
+        <td>{{ manuscript.content_summary }}</a></td>
+      </tr>
+      {% endif %}
+      {% if manuscript.catalogue_url %}
+      <tr>
+        <th scope="row">Catalogue URL</th>
+        <td><a href='{{ manuscript.catalogue_url }}'>{{ manuscript.catalogue_url }}</a></td>
+      </tr>
+      {% endif %}
+      {% if manuscript.iiif_manifest_url %}
+      <tr>
+        <th scope="row">IIIF Manifest</th>
+        <td><a href='{{ manuscript.iiif_manifest_url }}'>{{ manuscript.iiif_manifest_url }}</a></td>
+      </tr>
+      {% endif %}
+      {% if manuscript.date %}
+      <tr>
+        <th scope="row">Date</th>
+        <td>{{ manuscript.date }} <span style='font-variant: small-caps;'>ce</span></td>
+      </tr>
+      {% endif %}
+      {% if manuscript.provenance %}
+      <tr>
+        <th scope="row">Provenance</th>
+        <td>{{ manuscript.provenance }}</td>
+      </tr>
+      {% endif %}
+      {% if manuscript.tags.count %}
+      <tr>
+        <th scope="row">Tags</th>
+        <td>
+          {% for tag in manuscript.tags.all %}
+          <a href='{{tag.get_absolute_url}}' class="badge badge-primary">{{tag}}</a>
+          {% endfor %}
+        </td>
+      </tr>
+      {% endif %}
+      {% if manuscript.languages.count %}
+      <tr>
+        <th scope="row">Languages</th>
+        <td>
+          {% for language in manuscript.languages.all %}
+          <a href='{{language.get_absolute_url}}' class="badge badge-primary">{{language}}</a>
+          {% endfor %}
+        </td>
+      </tr>
+      {% endif %}
+      {% if manuscript.scripts.count %}
+      <tr>
+        <th scope="row">Scripts</th>
+        <td>
+          {% for script in manuscript.scripts.all %}
+          <a href='{{script.get_absolute_url}}' class="badge badge-primary">{{script}}</a>
+          {% endfor %}
+        </td>
+      </tr>
+      {% endif %}
+      {% if manuscript.material %}
+      <tr>
+        <th scope="row">Material</th>
+        <td>{{ manuscript.material }}</td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+
+  <h2>Physical Description</h2>
+  <table class="table">
+    <tbody>
+      {% attribute_row manuscript "support_description" header="Support" %}
+      {% attribute_row manuscript "extent_numeric" %}
+      {% attribute_row manuscript "extent_description" %}
+      {% attribute_row manuscript "dimensions_description" header="Dimensions" %}
+      {% attribute_row manuscript "height" suffix="mm" %}
+      {% attribute_row manuscript "width" suffix="mm" %}
+      {% attribute_row manuscript "collation" %}
+      {% attribute_row manuscript "catchwords" %}
+      {% attribute_row manuscript "signatures" %}
+      {% attribute_row manuscript "foliation" %}
+      {% attribute_row manuscript "layout" %}
+      {% attribute_row manuscript "hand_description" header="Hand" %}
+      {% attribute_row manuscript "decoration_description" header="Decoration" %}
+      {% attribute_row manuscript "music_notation" %}
+      {% attribute_row manuscript "binding_description" header="Binding" %}
+      {% attribute_row manuscript "seal_description" header="Seal" %}
+
+    </tbody>
+  </table>
+
+  {% if manuscript.info_set.count %}
+  <h3>Extra Information</h3>
+  <table class="table">
+    {% for info in manuscript.info_set.all %}
+    <tr>
+      <th scope="row"><a href='{{info.category.get_absolute_url}}'>{{ info.category }}</a></th>
+      <td>{{ info.text }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% endif %}
+
+  {% if manuscript.content_set.count %}
+  <h3>Contents</h3>
+  <table class="table">
+    {% for content in manuscript.content_set.all %}
+    <tr>
+      <th scope="row">{{ content.folio_range }}</th>
+      <td>{{ content.description }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% endif %}
+
+  <h3>References</h3>
+  {% references_list manuscript %}
+
+  {% if manuscript.repository.has_coords %}
+  <h3>Location</h3>
+  {% include 'kutub/repository_map_iframe.html' with repository=manuscript.repository %}
+  {% endif %}
+
+  {% if manuscript.iiif_manifest_url %}
+  <h3>IIIF Presentation</h3>
+  <iframe src='{% url "kutub:manuscript-iiif" slug=manuscript.slug %}' style="width: 100%; height: 450px;">
+    {{ manuscript }}
+  </iframe>
+  {% endif %}
+
+  {% if manuscript.placeholder %}
+  <h2>Notes</h2>
+  {% render_placeholder manuscript.placeholder %}
+  {% endif %}
 
 </div>
 

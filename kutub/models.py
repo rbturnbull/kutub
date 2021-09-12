@@ -10,8 +10,10 @@ from django_extensions.db.models import TimeStampedModel
 from next_prev import next_in_order, prev_in_order
 from publications.models import ReferenceModel
 
+
 def DescriptionField(**kwargs):
-    return models.CharField(max_length=1023, default="", blank=True, **kwargs)
+    return models.TextField(default="", blank=True, **kwargs)
+
 
 class XMLModel(models.Model):
     class Meta:

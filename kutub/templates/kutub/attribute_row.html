@@ -1,0 +1,6 @@
+{% if value %}
+    <tr>
+        <th scope="row"><span data-toggle="tooltip" data-placement="{{placement}}" title="{{help_text}}">{{ header }}</span></th>
+        <td>{{ value }} {{ suffix }}</td>
+    </tr>
+{% endif %}
