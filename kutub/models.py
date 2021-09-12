@@ -153,7 +153,10 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
     layout = DescriptionField(help_text="How how text is laid out on the page or surface of the manuscript, including information about any ruling, pricking, or other evidence of page-preparation techniques.")
     hand_description = DescriptionField(help_text="A description of all the different hands used in the manuscript.")
     decoration_description = DescriptionField(help_text="A description of the decoration of the manuscript.")
-
+    music_notation = DescriptionField(help_text="A description of the type of musical notation.")
+    binding_description = DescriptionField(help_text="A description of the state of the present and former bindings of a manuscript, including information about its material, any distinctive marks, and provenance information.")
+    seal_description = DescriptionField(help_text="information about the seal(s) attached to documents to guarantee their integrity, or to show authentication of the issuer or consent of the participants.")
+    
     class Meta:
         ordering = ["repository","identifier"]
 
@@ -247,6 +250,18 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
         if self.decoration_description:
             etree.SubElement(physical_description, "decoDesc").text = self.decoration_description
 
+        # Music Notation #
+        if self.music_notation:
+            etree.SubElement(physical_description, "musicNotation").text = self.music_notation
+
+        # Binding #
+        if self.binding_description:
+            etree.SubElement(etree.SubElement(physical_description, "bindingDesc"), "p").text = self.binding_description
+
+        # Seal #
+        if self.seal_description:
+            etree.SubElement(etree.SubElement(physical_description, "sealDesc"), "p").text = self.seal_description
+        
         if len(physical_description):
             root.append( physical_description )
 
