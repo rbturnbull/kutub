@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% load static i18n compress kutub cms_tags publication_extras %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="float-right">
+        {% if perms.kutub.add_repository %}
+            <a href="{% url 'kutub:repository-create'  %}" class="btn btn-outline-primary btn-sm chk-saved" data-toggle="tooltip" data-placement="bottom" title="Add Collection">
+                <i class="fas fa-plus"></i>
+            </a>
+        {% endif %}
+        {% if perms.kutub.update_repository %}
+            <a href="{{ repository.get_absolute_update_url }}" class="btn btn-outline-primary btn-sm chk-saved" data-toggle="tooltip" data-placement="bottom" title="Edit Collection">
+                <i class="fas fa-edit"></i>
+            </a>
+        {% endif %}
+        {% if request.user.is_staff %}
+            <a href="{{ repository.get_admin_url }}" class="btn btn-outline-primary btn-sm chk-saved" data-toggle="tooltip" data-placement="bottom" title="Admin">
+                <i class="fas fa-tools"></i>
+            </a>
+        {% endif %}
+        {% if repository.prev_in_order %}
+            <a href="{{ repository.prev_in_order.get_absolute_url }}" class="btn btn-outline-primary btn-sm chk-saved" data-toggle="tooltip" data-placement="bottom" title="{{ repository.prev_in_order }}">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        {% endif %}
+        {% if repository.next_in_order %}
+            <a href="{{ repository.next_in_order.get_absolute_url }}" class="btn btn-outline-primary btn-sm chk-saved" data-toggle="tooltip" data-placement="bottom" title="{{ repository.next_in_order }}">
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        {% endif %}
+
+    </div>
+
+    <h1>{{ repository }}</h1>
+    <ul>
+        {% for document in repository.document_set.all %}
+            <li><a href='{{ document.get_absolute_url }}'>{{ document }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <h2>Location</h2>
+    {% if repository.location_description %}
+        <p>{{repository.location_description}}</p>
+    {% endif %}
+    {% if repository.settlement %}
+        <p>{{repository.settlement}}</p>
+    {% endif %}
+    {% if repository.repository.has_coords %}
+        {% include 'kutub/repository_map_iframe.html' with repository=repository %}
+    {% endif %}
+
+    <h3>References</h3>
+    {% references_list repository %}
+
+</div>
+{% endblock %}

@@ -36,11 +36,11 @@ class NextPrevMixin(models.Model):
 
 
 class IdentifierModel(NextPrevMixin, TimeStampedModel, models.Model):
-    identifier = models.CharField(max_length=255, help_text="The name of this object.")
+    identifier = models.CharField(max_length=255, help_text="The identifier of this object.")
     slug = AutoSlugField(populate_from='identifier', unique=True)
 
     def __str__(self):
-        return self.name
+        return self.identifier
 
     class Meta:
         abstract = True
@@ -117,6 +117,9 @@ class Repository(XMLModel, ReferenceModel, IdentifierModel):
             etree.SubElement(location, "geo").text = f"{self.latitude} {self.longitude}"
 
         return root
+
+    def has_coords(self):
+        return self.latitude is not None and self.longitude is not None
 
 
 class Manuscript(XMLModel, ReferenceModel, IdentifierModel):

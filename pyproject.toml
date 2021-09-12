@@ -12,10 +12,13 @@ django-cms = "^3.9.0"
 django-publications = {git = "https://gitlab.unimelb.edu.au/rturnbull/django-publications.git"}
 lxml = "^4.6.3"
 django-next-prev = "^1.1.0"
+django-reversion = "^4.0.0"
+django-superform = {git = "https://github.com/Chirurgus/django-superform"}
+django-pandas = "^0.6.4"
 
 [tool.poetry.dev-dependencies]
 coverage = "^5.5"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["setuptools >= 40.6.0", "poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
