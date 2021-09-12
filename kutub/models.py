@@ -10,6 +10,9 @@ from django_extensions.db.models import TimeStampedModel
 from next_prev import next_in_order, prev_in_order
 from publications.models import ReferenceModel
 
+def DescriptionField(**kwargs):
+    return models.CharField(max_length=1023, default="", blank=True, **kwargs)
+
 class XMLModel(models.Model):
     class Meta:
         abstract = True
@@ -136,17 +139,20 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
     )    
     identifier = models.CharField(max_length=255, help_text="The identifier of the manuscript.")
     alt_identifier = models.CharField(max_length=255, default="", blank=True, help_text="An alternative identifier of the manuscript.")
-    content_summary = models.CharField(max_length=1023, default="", blank=True, help_text="A summary of the intellectual content in this manuscript. More details can be added below.")
+    content_summary = DescriptionField(help_text="A summary of the intellectual content in this manuscript. More details can be added below.")
     extent_numeric = models.PositiveIntegerField(default=None, null=True, blank=True, help_text="The number of leaves in the manuscript as an integer.")
-    extent_description = models.CharField(max_length=1023, default="", blank=True, help_text="A description of the number of leaves in the manuscript.")
+    extent_description = DescriptionField(help_text="A description of the number of leaves in the manuscript.")
     height = models.PositiveIntegerField(default=None, blank=True, null=True, help_text="The measurement of the manuscript leaves in millimetres along the axis parallel to its bottom, e.g. perpendicular to the spine of a book or codex.")
     width = models.PositiveIntegerField(default=None, blank=True, null=True, help_text="The measurement in millimetres leaves along the axis at a right angle to the bottom of the manuscript.")
-    dimensions_description = models.CharField(max_length=1023, default="", blank=True, help_text="A description of the dimensions of the leaves which can be used if the basic height and width values are not sufficient.")
-    collation = models.CharField(max_length=1023, default="", blank=True, help_text="A description of the arrangement of the leaves and quires of the manuscript.")
-    catchwords = models.CharField(max_length=1023, default="", blank=True, help_text="The system used to ensure correct ordering of the quires or similar making up a codex, typically by means of annotations at the foot of the page.")
-    signatures = models.CharField(max_length=1023, default="", blank=True, help_text="A description of the leaf or quire signatures found within a codex.")
-    foliation = models.CharField(max_length=1023, default="", blank=True, help_text="The scheme, medium or location of folio, page, column, or line numbers written in the manuscript, frequently including a statement about when and, if known, by whom, the numbering was done.")
-    condition = models.CharField(max_length=1023, default="", blank=True, help_text="A summary of the overall physical state of a manuscript, in particular where such information is not recorded elsewhere in the description.")
+    dimensions_description = DescriptionField(help_text="A description of the dimensions of the leaves which can be used if the basic height and width values are not sufficient.")
+    collation = DescriptionField(help_text="A description of the arrangement of the leaves and quires of the manuscript.")
+    catchwords = DescriptionField(help_text="The system used to ensure correct ordering of the quires or similar making up a codex, typically by means of annotations at the foot of the page.")
+    signatures = DescriptionField(help_text="A description of the leaf or quire signatures found within a codex.")
+    foliation = DescriptionField(help_text="The scheme, medium or location of folio, page, column, or line numbers written in the manuscript, frequently including a statement about when and, if known, by whom, the numbering was done.")
+    condition = DescriptionField(help_text="A summary of the overall physical state of a manuscript, in particular where such information is not recorded elsewhere in the description.")
+    layout = DescriptionField(help_text="How how text is laid out on the page or surface of the manuscript, including information about any ruling, pricking, or other evidence of page-preparation techniques.")
+    hand_description = DescriptionField(help_text="A description of all the different hands used in the manuscript.")
+    decoration_description = DescriptionField(help_text="A description of the decoration of the manuscript.")
 
     class Meta:
         ordering = ["repository","identifier"]
@@ -184,6 +190,8 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
         ## Physical Description
         #########################
         physical_description = etree.Element("physDesc")
+        
+        # Object Description #
         object_description = etree.Element("objectDesc")
 
         ## Extent ##
@@ -225,6 +233,19 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
 
         if len(object_description):
             physical_description.append( object_description )
+
+        # Layout #
+        if self.layout:
+            #TODO Add columns
+            etree.SubElement(physical_description, "layout").text = self.layout
+
+        # Hand Description #
+        if self.hand_description:
+            etree.SubElement(physical_description, "handDesc").text = self.hand_description
+
+        # Decoration Description #
+        if self.decoration_description:
+            etree.SubElement(physical_description, "decoDesc").text = self.decoration_description
 
         if len(physical_description):
             root.append( physical_description )

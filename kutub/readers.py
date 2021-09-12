@@ -42,9 +42,13 @@ def import_europa_inventa(manuscripts_csv_path):
                 extent_description=row['extent'],
                 width=width,
                 height=height,
+                dimensions_description=dimensions_description,
                 collation=row['collation'],
                 catchwords=row['catchwords'],
                 foliation=row['foliation'],
                 condition=row['condition'],
+                layout=row['layout'],
+                hand_description=row['hand_desc'],
+                decoration_description=row['deco_desc'],
             )
 

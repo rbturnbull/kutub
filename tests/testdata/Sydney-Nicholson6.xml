@@ -13,7 +13,7 @@
   </msContents>
   <physDesc>
     <objectDesc>
-      <extent>iii + 58 <dimensions unit="mm"><height>228</height><width>165</width></dimensions></extent>
+      <extent>iii + 58 <dimensions unit="mm">228 x 165 mm<height>228</height><width>165</width></dimensions></extent>
       <collation>
         <p>(10)1-5 (8)6. Ar. - Br., 53v. - 58v., Cr.-v. blank</p>
         <catchwords>Catchwords agree</catchwords>
@@ -25,5 +25,8 @@
         <p>Edges trimmed. Water and rust stains throughout.</p>
       </condition>
     </objectDesc>
+    <layout>one col. of 25 - 30 lines</layout>
+    <handDesc>Italian littera humanistica textualis</handDesc>
+    <decoDesc>caps alternately red and blue; one border, Italian style, of inter twined vine stocks in blue, red, and green with a green parrot, on 1r.</decoDesc>
   </physDesc>
 </msDesc>

@@ -14,10 +14,7 @@
   <physDesc>
     <objectDesc>
       <extent>
-        <dimensions unit="mm">
-          <height>292</height>
-          <width>200</width>
-        </dimensions>
+        <dimensions unit="mm">292 x 200 mm<height>292</height><width>200</width></dimensions>
       </extent>
       <collation>
         <p>A + B + 190 + C + D</p>
@@ -27,5 +24,7 @@
         <p>Early foliation omitting ff.73 and 77.</p>
       </foliation>
     </objectDesc>
+    <layout>One column of 32 lines</layout>
+    <handDesc>15c. Italian humanist round in dark brown ink with red ink headings</handDesc>
   </physDesc>
 </msDesc>
