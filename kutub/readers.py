@@ -54,6 +54,7 @@ def import_europa_inventa(manuscripts_csv_path):
                 music_notation=row['music_notation'],
                 binding_description=row['binding'],
                 origin_place=row['orig_place'],
-                origin_date_description=row['orig_date'],
+                provenance=row['provenance'],
+                acquisition=row['acquisition'],
             )
 

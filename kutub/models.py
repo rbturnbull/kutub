@@ -199,7 +199,16 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
         null=True,
         help_text="The latest possible date for the origin of the manuscript.",
     )
-
+    provenance = DescriptionField(
+        tag="provenance",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#mshy",
+        help_text="Any description or other information concerning a single identifiable episode during the history of a manuscript, manuscript part, or other object after its creation but before its acquisition. Separated by one or more line breaks."
+    )
+    acquisition = DescriptionField(
+        tag="acquisition",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#mshy",
+        help_text="Any descriptive or other information concerning the process by which the manuscript entered the holding institution."
+    )
     
     class Meta:
         ordering = ["repository","identifier"]
@@ -321,6 +330,7 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
         #########################
         ## History
         #########################
+        history = etree.Element("history")
         
         # Origin
         kwargs = {}
@@ -340,9 +350,26 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
             etree.SubElement(origin, "origDate").text = self.origin_date_description
 
         if len(origin):
-            root.append( origin )
+            root.append( history )
+
+        # Provenance
+        for item in self.provenance_items():
+            etree.SubElement(etree.SubElement(history, "provenance"), "p").text = item
+
+        # Acquisition
+        if self.acquisition:
+            etree.SubElement(etree.SubElement(history, "acquisition"), "p").text = self.acquisition
+        
 
         return root
+
+    def provenance_items(self):
+        items = []
+        for component in self.provenance.split("\n"):
+            component = component.strip()
+            if component:
+                items.append(component)
+        return items
 
 
 class Side(models.TextChoices):
