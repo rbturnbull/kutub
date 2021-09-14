@@ -10,10 +10,10 @@ from django_extensions.db.models import TimeStampedModel
 from next_prev import next_in_order, prev_in_order
 from publications.models import ReferenceModel
 
+from .fields import DescriptionField
 
-def DescriptionField(**kwargs):
-    return models.TextField(default="", blank=True, **kwargs)
-
+# def DescriptionField(**kwargs):
+#     return models.TextField(default="", blank=True, **kwargs)
 
 class XMLModel(models.Model):
     class Meta:
@@ -141,7 +141,8 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
     )    
     identifier = models.CharField(max_length=255, help_text="The identifier of the manuscript.")
     alt_identifier = models.CharField(max_length=255, default="", blank=True, help_text="An alternative identifier of the manuscript.")
-    content_summary = DescriptionField(help_text="A summary of the intellectual content in this manuscript. More details can be added below.")
+    heading = DescriptionField(tag="head", docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msdo", help_text="A brief description of the manuscript (for example, the title).")
+    content_summary = DescriptionField(tag="summary", docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msco", help_text="A summary of the intellectual content in this manuscript. More details can be added below.")
     support_description = DescriptionField(help_text="A description of the physical support for the written part of a manuscript.")    
     extent_numeric = models.PositiveIntegerField(default=None, null=True, blank=True, help_text="The number of leaves in the manuscript as an integer.")
     extent_description = DescriptionField(help_text="A description of the number of leaves in the manuscript.")
@@ -188,6 +189,11 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
         contents = etree.Element("msContents")
         if self.content_summary:
             etree.SubElement(contents, "summary").text = self.content_summary
+
+        for item_index, item in enumerate(self.contentitem_set.all()):
+            item_xml = item.xml_element()
+            item_xml.set("n", item_index+1)
+            contents.append(item_xml)
 
         if len(contents):
             root.append( contents )
@@ -273,3 +279,147 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
             root.append( physical_description )
 
         return root
+
+
+class Side(models.TextChoices):
+    UNKNOWN = ''
+    RECTO = 'r'
+    VERSO = 'v'
+
+
+class ContentItem(XMLModel, ReferenceModel, TimeStampedModel, models.Model):
+    """
+    An individual work or item within the intellectual content of a manuscript.
+
+    https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msco
+    https://tei-c.org/release/doc/tei-p5-doc/en/html/ref-msItem.html
+    """
+    manuscript = models.ForeignKey(Manuscript, on_delete=models.CASCADE, help_text="The manuscript in which this item is found.")
+    locus_description = DescriptionField(tag="locus", docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msloc", help_text="A description identify any reference to one or more folios within a manuscript. If it is empty, it will be filled out by the fields to determin the start and end folios.")
+    start_folio = models.PositiveIntegerField(blank=True, null=True, default=None)
+    start_folio_side = models.CharField(max_length=1, default=Side.UNKNOWN, choices=Side.choices)
+    end_folio = models.PositiveIntegerField(blank=True, null=True, default=None)
+    end_folio_side = models.CharField(max_length=1, blank=True, default=Side.UNKNOWN, choices=Side.choices)
+    defective = models.BooleanField(default=None, null=True, blank=True, help_text="Whether the content item is incomplete through loss or damage.")
+    author = DescriptionField(
+        tag="author", 
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msat", 
+        help_text="The normalized form of an author's name, irrespective of how this form of the name is cited in the manuscript.",
+    )
+    responsibility_statement = DescriptionField(
+        tag="respStmt", 
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msat", 
+        help_text="A statement of responsibility for the intellectual content of a content item, where the author field does not suffice.",
+    )
+    title = DescriptionField(
+        tag="title", 
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msat", 
+        help_text="A regularized form of the item's title, as distinct from any rubric quoted from the manuscript."
+    )
+    rubric = DescriptionField(
+        tag="rubric", 
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#mscorie", 
+        help_text="the text of any rubric or heading attached to a particular content item.",
+    )
+    incipit = DescriptionField(
+        tag="incipit", 
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#mscorie", 
+        help_text="the text of any rubric or heading attached to a particular content item.",
+    )
+    quote = DescriptionField(
+        tag="quote", 
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#mscorie", 
+        help_text="A phrase or passage attributed by the narrator or author to some agency external to the text.",
+    )
+    explicit = DescriptionField(
+        tag="explicit", 
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#mscorie", 
+        help_text="The explicit of the item, that is, the closing words of the text proper, exclusive of any rubric or colophon which might follow it.",
+    )
+    final_rubric = DescriptionField(
+        tag="finalRubric", 
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#mscorie", 
+        help_text="the string of words that denotes the end of a text division, often with an assertion as to its author and title.",
+    )
+    colophon = DescriptionField(
+        tag="colophon", 
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#mscorie", 
+        help_text="The colophon of an item: that is, a statement providing information regarding the date, place, agency, or reason for production of the manuscript.",
+    )
+    deco_note = DescriptionField(
+        tag="decoNote", 
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msphdec", 
+        help_text="A note describing either a decorative component of a manuscript.",
+    )
+    filiation = DescriptionField(
+        tag="filiation", 
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msfil", 
+        help_text="Information concerning the manuscript or other object's filiation, i.e. its relationship to other surviving manuscripts.",
+    )
+    note = DescriptionField(
+        tag="note", 
+        help_text="A note or annotation.",
+    )
+    # TODO textLang Language
+    # textLang (text language) describes the languages and writing systems identified within the bibliographic work being described, rather than its description.
+
+    class Meta:
+        ordering = ["manuscript", "start_folio", "end_folio_side", "end_folio", "end_folio_side", "author", "title"]
+
+    def folio_range(self):
+        start_folio = self.start_folio or ""
+        end_folio = self.end_folio or ""
+        start_ref = f"{start_folio}{self.start_folio_side}"
+        if start_folio == end_folio:
+            if self.start_folio_side == self.end_folio_side:
+                return start_ref
+            return f"{start_ref}–{self.end_folio_side}"
+        return f"{start_ref}–{end_folio}{self.end_folio_side}"
+
+    def xml_element(self):
+        """ 
+        Returns an etree element for this content item which conforms to TEI P5.
+        
+        https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msco
+        https://tei-c.org/release/doc/tei-p5-doc/en/html/ref-msItem.html
+        """
+        root = etree.Element("msItem")
+
+        # Locus
+        locus_description = self.locus_description
+        if not locus_description:
+            locus_description = self.folio_range()
+        
+        if locus_description:
+            kwargs = {}
+            if self.start_folio and self.start_folio_side:
+                kwargs["from"] = f"{self.start_folio}{self.start_folio_side}"
+            if self.end_folio and self.end_folio_side:
+                kwargs["to"] = f"{self.end_folio}{self.end_folio_side}"
+            
+            etree.SubElement(root, "locus", **kwargs).text = locus_description
+        
+        self.add_sub_element(root, "author")
+        self.add_sub_element(root, "responsibility_statement") # should there be sub elements?
+        self.add_sub_element(root, "title")
+        self.add_sub_element(root, "rubric")
+        self.add_sub_element(root, "incipit")
+        self.add_sub_element(root, "quote")
+        self.add_sub_element(root, "explicit")
+        self.add_sub_element(root, "final_rubric")
+        self.add_sub_element(root, "colophon")
+        self.add_sub_element(root, "deco_note")
+        self.add_sub_element(root, "filiation")
+        self.add_sub_element(root, "note")
+
+        return root
+
+    def add_sub_element(self, parent, field_name):
+        value = getattr(self, field_name)
+        if value:
+            tag = field_name
+            for field in self._meta.fields:
+                if field.name == field_name:
+                    tag = field.tag
+
+            etree.SubElement(parent, tag).text = value
