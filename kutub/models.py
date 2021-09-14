@@ -192,7 +192,7 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
 
         for item_index, item in enumerate(self.contentitem_set.all()):
             item_xml = item.xml_element()
-            item_xml.set("n", item_index+1)
+            item_xml.set("n", str(item_index+1))
             contents.append(item_xml)
 
         if len(contents):

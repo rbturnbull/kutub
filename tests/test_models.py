@@ -93,6 +93,22 @@ class ManuscriptTests(TestCase):
             b'<msDesc><msIdentifier><repository><name>Repository Name</name></repository><idno>Shelfmark</idno></msIdentifier></msDesc>',
         )
 
+    def test_content_items(self):
+        manuscript = models.Manuscript.objects.create(
+            identifier="Shelfmark",
+        )
+        models.ContentItem.objects.create(
+            manuscript=manuscript,
+            title="item 1",
+        )        
+        models.ContentItem.objects.create(
+            manuscript=manuscript,
+            title="item 2",
+        )        
+        self.assertEqual(
+            manuscript.xml_string(),
+            b'<msDesc><msIdentifier><idno>Shelfmark</idno></msIdentifier><msContents><msItem n="1"><title>item 1</title></msItem><msItem n="2"><title>item 2</title></msItem></msContents></msDesc>',
+        )                                
 
 
 class ContentItemTests(TestCase):
