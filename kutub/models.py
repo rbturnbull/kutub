@@ -9,6 +9,7 @@ from django_extensions.db.models import TimeStampedModel
 
 from next_prev import next_in_order, prev_in_order
 from publications.models import ReferenceModel
+from partial_date.fields import PartialDateField
 
 from .fields import DescriptionField
 
@@ -27,7 +28,17 @@ class XMLModel(models.Model):
 
     def xml_string(self, **kwargs):
         return etree.tostring(self.xml_element(), **kwargs)
-    
+
+    def add_sub_element(self, parent, field_name):
+        value = getattr(self, field_name)
+        if value:
+            tag = field_name
+            for field in self._meta.fields:
+                if field.name == field_name:
+                    tag = field.tag
+
+            etree.SubElement(parent, tag).text = value
+
 
 class NextPrevMixin(models.Model):
     class Meta:
@@ -160,6 +171,35 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
     music_notation = DescriptionField(help_text="A description of the type of musical notation.")
     binding_description = DescriptionField(help_text="A description of the state of the present and former bindings of a manuscript, including information about its material, any distinctive marks, and provenance information.")
     seal_description = DescriptionField(help_text="information about the seal(s) attached to documents to guarantee their integrity, or to show authentication of the issuer or consent of the participants.")
+    # History
+    origin = DescriptionField(
+        tag="origin",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#mshy",
+        help_text="Any descriptive or other information concerning the origin of a manuscript."
+    )
+    origin_place = DescriptionField(
+        tag="origPlace",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msdates",
+        help_text="Any form of place name, used to identify the place of origin for a manuscript."
+    )
+    origin_date_description = DescriptionField(
+        tag="origDate",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msdates",
+        help_text="Any form of date, used to identify the date of origin for a manuscript, manuscript part, or other object."
+    )
+    origin_date_earliest = PartialDateField(
+        blank=True,
+        default=None,
+        null=True,
+        help_text="The earliest possible date for the origin of the manuscript.",
+    )
+    origin_date_latest = PartialDateField(
+        blank=True,
+        default=None,
+        null=True,
+        help_text="The latest possible date for the origin of the manuscript.",
+    )
+
     
     class Meta:
         ordering = ["repository","identifier"]
@@ -277,6 +317,30 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
         
         if len(physical_description):
             root.append( physical_description )
+
+        #########################
+        ## History
+        #########################
+        
+        # Origin
+        kwargs = {}
+        if self.origin_date_earliest:
+            kwargs['notBefore'] = str(self.origin_date_earliest)
+        if self.origin_date_latest:
+            kwargs['notAfter'] = str(self.origin_date_latest)
+        origin = etree.Element("origin", **kwargs)
+        
+        if self.origin:
+            etree.SubElement(origin, "p").text = self.origin
+        
+        if self.origin_place:
+            etree.SubElement(origin, "origPlace").text = self.origin_place
+        
+        if self.origin_date_description:
+            etree.SubElement(origin, "origDate").text = self.origin_date_description
+
+        if len(origin):
+            root.append( origin )
 
         return root
 
@@ -414,12 +478,3 @@ class ContentItem(XMLModel, ReferenceModel, TimeStampedModel, models.Model):
 
         return root
 
-    def add_sub_element(self, parent, field_name):
-        value = getattr(self, field_name)
-        if value:
-            tag = field_name
-            for field in self._meta.fields:
-                if field.name == field_name:
-                    tag = field.tag
-
-            etree.SubElement(parent, tag).text = value

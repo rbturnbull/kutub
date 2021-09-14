@@ -15,6 +15,7 @@ django-next-prev = "^1.1.0"
 django-reversion = "^4.0.0"
 django-superform = {git = "https://github.com/Chirurgus/django-superform"}
 django-pandas = "^0.6.4"
+django-partial-date = {git = "https://github.com/rbturnbull/django_partial_date.git"}
 
 [tool.poetry.dev-dependencies]
 coverage = "^5.5"
