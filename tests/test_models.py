@@ -93,3 +93,50 @@ class ManuscriptTests(TestCase):
             b'<msDesc><msIdentifier><repository><name>Repository Name</name></repository><idno>Shelfmark</idno></msIdentifier></msDesc>',
         )
 
+
+
+class ContentItemTests(TestCase):
+    def setUp(self):
+        self.manuscript = models.Manuscript.objects.create(
+            identifier="Shelfmark",
+        )
+        return super().setUp()
+
+    def test_tei_title(self):
+        item = models.ContentItem.objects.create(
+            manuscript=self.manuscript,
+            title="Item Title",
+        )
+        self.assertEqual(
+            item.xml_string(),
+            b'<msItem><title>Item Title</title></msItem>',
+        )
+
+    def test_tei_locus_author(self):
+        item = models.ContentItem.objects.create(
+            manuscript=self.manuscript,
+            author="Author",
+            start_folio=3,
+            start_folio_side="r",
+            end_folio=4,
+            end_folio_side="v",
+            locus_description="3r to 4v",
+        )
+        self.assertEqual(
+            item.xml_string(),
+            b'<msItem><locus from="3r" to="4v">3r to 4v</locus><author>Author</author></msItem>',
+        )
+
+    def test_folio_range(self):
+        item = models.ContentItem.objects.create(
+            manuscript=self.manuscript,
+            start_folio=3,
+            start_folio_side="r",
+            end_folio=4,
+            end_folio_side="v",
+        )
+        self.assertEqual(
+            item.folio_range(),
+            "3r–4v",
+        )
+
