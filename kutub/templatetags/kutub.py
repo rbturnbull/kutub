@@ -73,8 +73,8 @@ def attribute_row(object, field_name, suffix="", header=""):
 
 
 @register.inclusion_tag('kutub/grid_attribute.html')
-def grid_attribute(object, field_name, suffix="", header="", cols=12, url="", blanktext=""):
-    header = header or field_name.replace("_", " ").title()
+def grid_attribute(object, field_name, suffix="", header="", cols=None, url="", blanktext=""):
+    header = header or object.field_attr(field_name, "verbose_name").title()
     value = getattr(object, field_name) or blanktext
     return {
         'object': object,
@@ -88,6 +88,17 @@ def grid_attribute(object, field_name, suffix="", header="", cols=12, url="", bl
         "header": header,
         "cols": cols,
         "url": url,
+    }
+
+@register.inclusion_tag('kutub/grid_attribute_form.html')
+def grid_attribute_form(form, field_name, cols=None, header="", suffix=""):
+    field = form[field_name]
+    docs = getattr(field.field, 'docs') if hasattr(field.field, 'docs') else ""
+    return {
+        'field': field,
+        'cols': cols,
+        'docs': docs,
+        'placement': "bottom",
     }
 
 

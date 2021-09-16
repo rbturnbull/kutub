@@ -6,24 +6,8 @@
 {% block content %}
 
 {% addtoblock "css" %}
-<style>
-  .xml {
-    background-color: rgb(255, 245, 233);
-    padding: 20px;
-  }
-  summary {
-    outline: none;
-    color: #18bc9c;
-    font-size: 1.5rem;
-    padding-bottom: 10px;
-  }
-  summary span {
-    padding-left: 20px;
-  }
-</style>
+{% include "kutub/detail_css.html" %}
 {%endaddtoblock %}
-
-
 
 <div class="container">
 
@@ -143,11 +127,11 @@
   <details open>
     <summary ><span>Physical Description</span></summary>
     <div class="row">
-      {% grid_attribute manuscript "support_description" header="Support" cols=3 %}
+      {% grid_attribute manuscript "support_description" header="Support" %}
     </div>
     <div class="row">
-      {% grid_attribute manuscript "extent_numeric" cols=3 %}
-      {% grid_attribute manuscript "extent_description" cols=3 %}
+      {% grid_attribute manuscript "extent_numeric" %}
+      {% grid_attribute manuscript "extent_description"  %}
     </div>
     <div class="row">
       {% grid_attribute manuscript "dimensions_description" header="Dimensions" cols=6 %}
@@ -159,10 +143,12 @@
       {% grid_attribute manuscript "catchwords" cols=3 %}
       {% grid_attribute manuscript "signatures" cols=3 %}
       {% grid_attribute manuscript "foliation" cols=3 %}
-      {% grid_attribute manuscript "layout" cols=3 %}
     </div>
     <div class="row">
-      {% grid_attribute manuscript "hand_description" cols=3 %}
+      {% grid_attribute manuscript "layout" %}
+      {% grid_attribute manuscript "hand_description" %}
+    </div>
+    <div class="row">
       {% grid_attribute manuscript "decoration_description" cols=3 %}
       {% grid_attribute manuscript "music_notation" cols=3 %}
       {% grid_attribute manuscript "binding_description" cols=3 %}
@@ -173,17 +159,17 @@
   <details open>
     <summary ><span>History</span></summary>
     <div class="row">
-      {% grid_attribute manuscript "origin" cols=6 blanktext="—" %}
-      {% grid_attribute manuscript "origin_place" cols=6 %}
+      {% grid_attribute manuscript "origin"  %}
+      {% grid_attribute manuscript "origin_place"  %}
     </div>
     <div class="row">
-      {% grid_attribute manuscript "origin_date_description" cols=6 %}
+      {% grid_attribute manuscript "origin_date_description" %}
       {% grid_attribute manuscript "origin_date_earliest" cols=3 %}
       {% grid_attribute manuscript "origin_date_latest" cols=3 %}
     </div>
     <div class="row">
-      {% grid_attribute manuscript "provenance" cols=6 %}
-      {% grid_attribute manuscript "acquisition" cols=6 %}
+      {% grid_attribute manuscript "provenance"  %}
+      {% grid_attribute manuscript "acquisition"  %}
     </div>
 
   </details>

@@ -6,27 +6,30 @@
 
 <div class="container">
 
-    <div class="float-right">
-        {% if perms.kutub.add_repository %}
-            <a href="{% url 'kutub:repository-create'  %}" class="btn btn-outline-primary btn-sm chk-saved" data-toggle="tooltip" data-placement="bottom" title="Add Collection">
-            <i class="fas fa-plus"></i>
-            </a>
-        {% endif %}
-    </div>
-
-    <h1>Collections</h1>
-
-    {% if show_map %}
-        <iframe src="{% url 'kutub:all-repositories-map' %}" title="Collections Map" width="100%" height="300px" frameBorder="0">
-        </iframe>
+  <div class="float-right">
+    {% if perms.kutub.add_repository %}
+    <a href="{% url 'kutub:repository-create' %}" class="btn btn-outline-primary btn-sm chk-saved"
+      data-toggle="tooltip" data-placement="bottom" title="Add Repository">
+      <i class="fas fa-plus"></i>
+    </a>
     {% endif %}
+  </div>
 
-    <ul>
-        {% for obj in page_obj %}
-            <li><a href="{{ obj.get_absolute_url }}">{{ obj }}</a></li>
-        {% endfor %}
-    </ul>
+  <h1>Repositories</h1>
 
+  {% if show_map %}
+  <iframe src="{% url 'kutub:all-repositories-map' %}" title="Repositories Map" width="100%" height="300px"
+    frameBorder="0">
+  </iframe>
+  {% endif %}
+
+  <ul class="mt-3">
+    {% for obj in page_obj %}
+    <li><a href="{{ obj.get_absolute_url }}">{{ obj }}</a></li>
+    {% endfor %}
+  </ul>
+
+  <P>pagination here</P>
 </div>
 
 {% endblock %}

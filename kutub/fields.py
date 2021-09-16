@@ -1,5 +1,8 @@
 from django.db import models
 from django.core.validators import RegexValidator
+from django import forms
+from django.utils.text import capfirst
+
 
 class DescriptionField(models.TextField):
     description = "A text field that can corresponds to a TEI element."
@@ -21,6 +24,15 @@ class DescriptionField(models.TextField):
             )
         kwargs['validators'] = validators
         super().__init__(*args, **kwargs)
+
+    def formfield(self, **kwargs):
+        defaults = {
+            'widget': forms.Textarea(attrs={'rows':1}),
+        }
+        formfield = super().formfield(**defaults)
+        formfield.docs = self.docs
+        formfield.tag = self.tag
+        return formfield
 
     def reference_url(self):
         return f"https://tei-c.org/release/doc/tei-p5-doc/en/html/ref-{self.tag}.html"

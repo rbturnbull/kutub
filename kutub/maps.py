@@ -32,10 +32,10 @@ def repositories_map(repositories):
         get_position=['longitude', 'latitude'],
     )
     tooltip = {
-        "html": "<b>Name:</b> {name} <br/> <b>URL:</b> {url}",
+        "html": "<b>Name:</b> {identifier} <br/> <b>Settlement:</b> {settlement}<br/> <b>URL:</b> {url}",
         "style": {
-                "backgroundColor": "steelblue",
-                "color": "white"
+            "backgroundColor": "steelblue",
+            "color": "white"
         }
     }
     r = pdk.Deck(layers=[icon_layer], initial_view_state=view_state, tooltip=tooltip, map_style=pdk.map_styles.LIGHT)

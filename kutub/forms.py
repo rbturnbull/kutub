@@ -70,39 +70,24 @@ class RepositoryForm(forms.ModelForm):
             submit_buttons(),
         )
 
-# class InfoForm(SuperModelForm):
-#     class Meta:
-#         model = models.Info
-#         fields = "__all__"
+class ContentItemForm(SuperModelForm):
+    class Meta:
+        model = models.ContentItem
+        fields = "__all__"
 
 
-# InfoFormSet = inlineformset_factory(
-#     model=models.Info,
-#     parent_model=models.Document,
-#     form=InfoForm,
-#     extra=0,
-#     can_delete=True
-# )
-
-
-# class ContentForm(SuperModelForm):
-#     class Meta:
-#         model = models.Content
-#         fields = "__all__"
-
-
-# ContentFormSet = inlineformset_factory(
-#     model=models.Content,
-#     parent_model=models.Document,
-#     form=ContentForm,
-#     extra=0,
-#     can_delete=True
-# )
+ContentItemFormSet = inlineformset_factory(
+    model=models.ContentItem,
+    parent_model=models.Manuscript,
+    form=ContentItemForm,
+    extra=0,
+    can_delete=True
+)
 
 
 class ManuscriptForm(SuperModelForm):
-    # infos = InlineFormSetField(formset_class=InfoFormSet)
-    # content = InlineFormSetField(formset_class=ContentFormSet)
+    content_items = InlineFormSetField(formset_class=ContentItemFormSet)
+
     class Meta:
         fields = "__all__"
         model = models.Manuscript

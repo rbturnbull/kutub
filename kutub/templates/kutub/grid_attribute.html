@@ -1,5 +1,5 @@
 {% if value %}
-  <div class="{% if cols %}col-sm-{{ cols }}{%endif%} padding mt-2 mb-2" >
+  <div class="{% if cols %}col-sm-{{ cols }}{% else %}col{%endif%} padding mt-2 mb-2" >
     <label>{{ header }}</label>
     <span>
       {% if docs %}

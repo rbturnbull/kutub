@@ -1,0 +1,26 @@
+{% load widget_tweaks %}
+
+<div class="field {% if cols %}col-sm-{{ cols }}{% else %}col{%endif%} padding mt-2 mb-2">
+    {% if label %}
+        <label for="{{ field.id_for_label }}">{{ label }}</label>
+    {% else %}
+        {{ field.label_tag }}
+    {% endif %}
+    <span>
+        {% if docs %}
+        <a href='{{ docs }}' target='_blank' >
+        {% endif %}
+        <label class='ml-3' data-toggle="tooltip" data-placement="{{placement}}" title="{{field.help_text}}" {% if docs %}style='cursor: pointer !important;'{% endif %}>
+            <i class="fas fa-info-circle"></i>
+        </label>
+        {% if docs %}
+        </a>
+        {% endif %}
+    </span>      
+    <br>
+    {% render_field field class+="form-control" %}
+    <small class='help-text form-text text-muted'>{{ field.help_text }}</small>
+    {% if field.errors %}
+        <span>{{ field.errors|striptags }}</span>
+    {% endif %}
+</div>

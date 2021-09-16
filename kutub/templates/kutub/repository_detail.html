@@ -58,9 +58,8 @@
 
     <div class="row">
       {% grid_attribute repository "identifier"  cols=6  %}
-      {% grid_attribute repository "url"  cols=6  %}
+      {% grid_attribute repository "url"  cols=6 url=repository.url header="URL" %}
     </div>
-
 
     <div class="row">
       {% grid_attribute repository "location_description"  cols=3  %}
@@ -69,8 +68,8 @@
       {% grid_attribute repository "longitude"  cols=3  %}
     </div>
   
-    {% if repository.repository.has_coords %}
-        {% include 'kutub/repository_map_iframe.html' with repository=repository %}
+    {% if repository.has_coords %}
+        {% include 'kutub/repository_map_iframe.html' with repository=repository  %}
     {% endif %}
 
     <hr>
@@ -81,8 +80,6 @@
           <li><a href='{{ manuscript.get_absolute_url }}'>{{ manuscript }}</a></li>
         {% endfor %}
       </ul>
-  
-  
     </details>
     <hr>
     <details open>

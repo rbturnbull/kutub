@@ -1,125 +1,137 @@
 {% extends 'themata/navbar.html' %}
-{% load static crispy_forms_tags sekizai_tags publication_extras %}
+{% load static crispy_forms_tags sekizai_tags publication_extras kutub %}
 
 {% block content %}
-    {{ form.media.css }}
-    <div class="container mt-5 form-container" id='welcome_heading'>
-        <h1>{{ form_title }}</h1>
-        <div class="container">
-            <form action="" data-validate="" method="post">
-                {% include 'kutub/form_preamble.html' %}
-        
-                <div class="form-row">
-                    <div class="form-group col-md-6 mb-0">
-                        {% include 'kutub/field.html' with field=form.name %}
-                    </div>
-                    <div class="form-group col-md-5 mb-0">
-                        {% include 'kutub/field.html' with field=form.repository %}
-                    </div>
-                    <div class="form-group col-md-1 mb-0">
-                        {% if perms.kutub.add_repository %}
-                            <label>&nbsp;</label><br>
-                            <a href="{% url 'kutub:repository-create'  %}" class="btn btn-primary" target=”_blank” data-toggle="tooltip" data-placement="bottom" title="Add Collection">
-                                <i class="fas fa-plus"></i> Add
-                            </a>
-                            <small class='help-text form-text text-muted'>After adding, refresh page.</small>
 
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-12 mb-0">
-                        {% include 'kutub/field.html' with field=form.content_summary %}
-                    </div>
-                    <div class="form-group col-md-12 mb-0">
-                        {% include 'kutub/field.html' with field=form.catalogue_url %}
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-12 mb-0">
-                        {% include 'kutub/field.html' with field=form.tags %}
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6 mb-0">
-                        {% include 'kutub/field.html' with field=form.date %}
-                    </div>
-                    <div class="form-group col-md-3 mb-0">
-                        {% include 'kutub/field.html' with field=form.width %}
-                    </div>
-                    <div class="form-group col-md-3 mb-0">
-                        {% include 'kutub/field.html' with field=form.height %}
-                    </div>
+{% addtoblock "css" %}
+{% include "kutub/detail_css.html" %}
+{%endaddtoblock %}
 
-                </div>
+{{ form.media.css }}
+<div class="container mt-5 form-container" id='welcome_heading'>
+  <h1>{{ form_title }}</h1>
+  <div class="container">
+    <form action="" data-validate="" method="post">
+      {% include 'kutub/form_preamble.html' %}
 
-                <div class="form-row">
-                    <div class="form-group col-md-6 mb-0">
-                        {% include 'kutub/field.html' with field=form.material %}
-                    </div>
-                    <div class="form-group col-md-3 mb-0">
-                        {% include 'kutub/field.html' with field=form.folios %}
-                    </div>
-                    <div class="form-group col-md-3 mb-0">
-                        {% include 'kutub/field.html' with field=form.columns %}
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6 mb-0">
-                        {% include 'kutub/field.html' with field=form.languages %}
-                    </div>
-                    <div class="form-group col-md-6 mb-0">
-                        {% include 'kutub/field.html' with field=form.scripts %}
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-12 mb-0">
-                        {% include 'kutub/field.html' with field=form.provenance %}
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-12 mb-0">
-                        {% include 'kutub/field.html' with field=form.iiif_manifest_url %}
-                    </div>
-                </div>
-
-                {% include 'kutub/info_formsets.html' %}
-                {% include 'kutub/content_formsets.html' %}
-
-                <button type="submit" class="btn btn-primary">Save</button>
-                {% reference_add_button document %}
-                <a href="../" class="btn btn-warning">Cancel</a>   
-                
-
-
-            </form>
+      <details open class="mt-5">
+        <summary ><span>MS. Details</span></summary>
+        <div class="form-row">
+          {% grid_attribute_form form "heading"  cols=6 %}
+          {% grid_attribute_form form "identifier"  cols=3 %}
+          {% grid_attribute_form form "alt_identifier"  cols=3 %}
+        </div>    
+        <div class="row">
+          <div class="form-group col-md-10 mb-0">
+            {% include 'kutub/field.html' with field=form.repository %}
+          </div>
+          <div class="form-group col-md-2 mb-0">
+            {% if perms.kutub.add_repository %}
+            <label>&nbsp;</label><br>
+            <a href="{% url 'kutub:repository-create'  %}" class="btn btn-primary" target=”_blank” data-toggle="tooltip"
+              data-placement="bottom" title="Add Collection">
+              <i class="fas fa-plus"></i> Add Repository
+            </a>
+            <small class='help-text form-text text-muted'>After adding, refresh page.</small>
+  
+            {% endif %}
+          </div>  
         </div>
-    </div>
+    
+      </details>
 
-    {% addtoblock "js" %}
+      <hr>
+      <details open>
+        <summary ><span>Contents</span></summary>
+        <div class="row">
+          {% grid_attribute_form form "content_summary" cols=12  %}
+        </div>
+      </details>      
+      <hr>
+      <details open>
+        <summary ><span>Physical Description</span></summary>
+        <div class="row">
+          {% grid_attribute_form form "support_description" header="Support"  %}
+        </div>
+        <div class="row">
+          {% grid_attribute_form form "extent_numeric"  %}
+          {% grid_attribute_form form "extent_description"  %}
+        </div>
+        <div class="row">
+          {% grid_attribute_form form "dimensions_description" header="Dimensions"  %}
+          {% grid_attribute_form form "height" suffix="mm" cols=3 %}
+          {% grid_attribute_form form "width" suffix="mm" cols=3 %}
+        </div>
+        <div class="row">
+          {% grid_attribute_form form "collation" cols=3 %}
+          {% grid_attribute_form form "catchwords" cols=3 %}
+          {% grid_attribute_form form "signatures" cols=3 %}
+          {% grid_attribute_form form "foliation" cols=3 %}
+        </div>
+        <div class="row">
+          {% grid_attribute_form form "layout"  %}
+          {% grid_attribute_form form "hand_description"  %}
+        </div>
+        <div class="row">
+          {% grid_attribute_form form "decoration_description" cols=3 %}
+          {% grid_attribute_form form "music_notation" cols=3 %}
+          {% grid_attribute_form form "binding_description" cols=3 %}
+          {% grid_attribute_form form "seal_description" cols=3 %}        
+        </div>       
+      </details>        
+      <details open>
+        <summary ><span>History</span></summary>
+        <div class="row">
+          {% grid_attribute_form form "origin"  %}
+          {% grid_attribute_form form "origin_place"  %}
+        </div>
+        <div class="row">
+          {% grid_attribute_form form "origin_date_description"  %}
+          {% grid_attribute_form form "origin_date_earliest" cols=3 %}
+          {% grid_attribute_form form "origin_date_latest" cols=3 %}
+        </div>
+        <div class="row">
+          {% grid_attribute_form form "provenance"  %}
+          {% grid_attribute_form form "acquisition"  %}
+        </div>
+    
+      </details>
 
-    <!-- kutub/form.html js -->
-    {{ form.media.js }}
-    <script>
-        function setupForms() {
-            $('.add-form').unbind('click');
-            $('.add-form').click(function () {
-                let tag = $(this).data('tag');
-                let total_form = $('#id_'+tag+'-TOTAL_FORMS');
-                let form_idx = total_form.val();
-                $('#'+tag+'-wrapper').append($('#'+tag+'-empty').html().replace(/__prefix__/g, form_idx));
-                Tagulous.select2($("#id_"+tag+"-"+form_idx+"-category"), true);
+      {#% include 'kutub/content_formsets.html' %#}
 
-                total_form.val(parseInt(form_idx)+1);
-                setupForms();
-            });
-        }
-        $(function () {
-            setupForms();
-        });
-    </script>
-    <!-- end kutub/form.html js -->
-    {% endaddtoblock %}
+      <button type="submit" class="btn btn-primary">Save</button>
+      {% reference_add_button document %}
+      <a href="../" class="btn btn-warning">Cancel</a>
+
+
+
+    </form>
+  </div>
+</div>
+
+{% addtoblock "js" %}
+
+<!-- kutub/form.html js -->
+{{ form.media.js }}
+<script>
+  function setupForms() {
+    $('.add-form').unbind('click');
+    $('.add-form').click(function () {
+      let tag = $(this).data('tag');
+      let total_form = $('#id_' + tag + '-TOTAL_FORMS');
+      let form_idx = total_form.val();
+      $('#' + tag + '-wrapper').append($('#' + tag + '-empty').html().replace(/__prefix__/g, form_idx));
+      Tagulous.select2($("#id_" + tag + "-" + form_idx + "-category"), true);
+
+      total_form.val(parseInt(form_idx) + 1);
+      setupForms();
+    });
+  }
+  $(function () {
+    setupForms();
+  });
+</script>
+<!-- end kutub/form.html js -->
+{% endaddtoblock %}
 
 {% endblock %}
-
