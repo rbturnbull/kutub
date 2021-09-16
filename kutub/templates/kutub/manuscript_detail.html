@@ -11,6 +11,13 @@
     background-color: rgb(255, 245, 233);
     padding: 20px;
   }
+  summary {
+    outline: none;
+  }
+  summary span {
+    color: #18bc9c;
+    font-size: 1.5rem;
+  }
 </style>
 {%endaddtoblock %}
 
@@ -53,199 +60,117 @@
 
   <h1>{{ manuscript }}</h1>
 
-
-  <nav>
-    <div class="nav nav-tabs mb-4" id="nav-tab" role="tablist">
-      <a class="nav-item nav-link active" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">MS. Details</a>
-      <a class="nav-item nav-link" id="nav-contents-tab" data-toggle="tab" href="#nav-contents" role="tab" aria-controls="nav-contents" aria-selected="false">Contents</a>
-      <a class="nav-item nav-link" id="nav-physical-tab" data-toggle="tab" href="#nav-physical" role="tab" aria-controls="nav-physical" aria-selected="false">Physical Description</a>
-      <a class="nav-item nav-link" id="nav-history-tab" data-toggle="tab" href="#nav-history" role="tab" aria-controls="nav-history" aria-selected="false">History</a>
-      <a class="nav-item nav-link" id="nav-references-tab" data-toggle="tab" href="#nav-references" role="tab" aria-controls="nav-references" aria-selected="false">References</a>
-      <a class="nav-item nav-link" id="nav-tei-tab" data-toggle="tab" href="#nav-tei" role="tab" aria-controls="nav-tei" aria-selected="false">TEI</a>
+  <details open>
+    <summary ><span>MS. Details</span></summary>
+    <div class="row">
+      {% grid_attribute manuscript "heading"  cols=6  %}
+      {% grid_attribute manuscript "identifier"  cols=3  %}
+      {% grid_attribute manuscript "alt_identifier"  cols=3  %}
+    </div>      
+    <div class="row">
+      {% grid_attribute manuscript "repository"  cols=6 url=manuscript.repository.get_absolute_url %}
+      {% grid_attribute manuscript.repository "location_description"  cols=3  %}
+      {% grid_attribute manuscript.repository "settlement"  cols=3  %}
     </div>
-  </nav>
-  <div class="tab-content" id="nav-tabContent">
-    <div class="tab-pane fade show active" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
-      <div class="row">
-        {% grid_attribute manuscript "heading"  cols=6  %}
-        {% grid_attribute manuscript "identifier"  cols=3  %}
-        {% grid_attribute manuscript "alt_identifier"  cols=3  %}
-      </div>      
-      <div class="row">
-        {% grid_attribute manuscript "repository"  cols=6 url=manuscript.repository.get_absolute_url %}
-        {% grid_attribute manuscript.repository "location_description"  cols=3  %}
-        {% grid_attribute manuscript.repository "settlement"  cols=3  %}
-      </div>
-  
-      <div class="row">
 
-        {% if manuscript.repository.has_coords %}
-        <h3>Location</h3>
-        {% include 'kutub/repository_map_iframe.html' with repository=manuscript.repository %}
-        {% endif %}   
-        
-        {% if manuscript.iiif_manifest_url %}
-        <h3>IIIF Presentation</h3>
-        <iframe src='{% url "kutub:manuscript-iiif" slug=manuscript.slug %}' style="width: 100%; height: 450px;">
-          {{ manuscript }}
-        </iframe>
-        {% endif %}
-              
-      </div>      
-    </div>
-    <div class="tab-pane fade" id="nav-contents" role="tabpanel" aria-labelledby="nav-contents-tab">
-      <div class="row">
-        {% grid_attribute manuscript "content_summary" cols=12 %}
-      </div>
+    <div class="row">
 
-      {% if manuscript.content_set.count %}
-      <h3>Contents</h3>
-      <table class="table">
-        {% for content in manuscript.content_set.all %}
-        <tr>
-          <th scope="row">{{ content.folio_range }}</th>
-          <td>{{ content.description }}</td>
-        </tr>
-        {% endfor %}
-      </table>
-      {% endif %}    
-    </div>
-    <div class="tab-pane fade" id="nav-physical" role="tabpanel" aria-labelledby="nav-physical-tab">
-      <div class="row">
-        {% grid_attribute manuscript "support_description" header="Support" cols=3 %}
-      </div>
-      <div class="row">
-        {% grid_attribute manuscript "extent_numeric" cols=3 %}
-        {% grid_attribute manuscript "extent_description" cols=3 %}
-      </div>
-      <div class="row">
-        {% grid_attribute manuscript "dimensions_description" header="Dimensions" cols=6 %}
-        {% grid_attribute manuscript "height" suffix="mm" cols=3 %}
-        {% grid_attribute manuscript "width" suffix="mm" cols=3 %}
-      </div>
-      <div class="row">
-        {% grid_attribute manuscript "collation" cols=3 %}
-        {% grid_attribute manuscript "catchwords" cols=3 %}
-        {% grid_attribute manuscript "signatures" cols=3 %}
-        {% grid_attribute manuscript "foliation" cols=3 %}
-      </div>
-      <div class="row">
-        {% grid_attribute manuscript "layout" cols=3 %}
-        {% grid_attribute manuscript "hand_description" cols=3 %}
-        {% grid_attribute manuscript "decoration_description" cols=3 %}
-        {% grid_attribute manuscript "music_notation" cols=3 %}
-        {% grid_attribute manuscript "binding_description" cols=3 %}
-        {% grid_attribute manuscript "seal_description" cols=3 %}        
-      </div>      
-    </div>
-    <div class="tab-pane fade" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab">
-      <div class="row">
-        {% grid_attribute manuscript "origin" cols=6 blanktext="—" %}
-        {% grid_attribute manuscript "origin_place" cols=6 %}
-      </div>
-      <div class="row">
-        {% grid_attribute manuscript "origin_date_description" cols=6 %}
-        {% grid_attribute manuscript "origin_date_earliest" cols=3 %}
-        {% grid_attribute manuscript "origin_date_latest" cols=3 %}
-      </div>
-      <div class="row">
-        {% grid_attribute manuscript "provenance" cols=6 %}
-        {% grid_attribute manuscript "acquisition" cols=6 %}
-      </div>
-
-    </div>
-    <div class="tab-pane fade" id="nav-references" role="tabpanel" aria-labelledby="nav-references-tab">
-
-      {% references_list manuscript %}
-    </div>
-    
-    <div class="tab-pane fade" id="nav-tei" role="tabpanel" aria-labelledby="nav-tei-tab">
-
-      <a href="./tei" type="button" class="btn btn-primary"><i class="fas fa-download"></i> Download TEI XML</a>
-      <pre lang="xml" class="xml">{{manuscript.xml_pretty_print}}</pre>
-    </div>
-  </div>
-  
-<!--
-
-  <table class="table">
-    <tbody>
-      <tr>
-        <th scope="row">Repository</th>
-        <td><a href='{{ manuscript.repository.get_absolute_url }}'>{{ manuscript.repository }}</a></td>
-      </tr>
-      {% if manuscript.content_summary %}
-      <tr>
-        <th scope="row">Content Summary</th>
-        <td>{{ manuscript.content_summary }}</a></td>
-      </tr>
-      {% endif %}
-      {% if manuscript.catalogue_url %}
-      <tr>
-        <th scope="row">Catalogue URL</th>
-        <td><a href='{{ manuscript.catalogue_url }}'>{{ manuscript.catalogue_url }}</a></td>
-      </tr>
-      {% endif %}
+      {% if manuscript.repository.has_coords %}
+      <h3>Location</h3>
+      {% include 'kutub/repository_map_iframe.html' with repository=manuscript.repository %}
+      {% endif %}   
+      
       {% if manuscript.iiif_manifest_url %}
-      <tr>
-        <th scope="row">IIIF Manifest</th>
-        <td><a href='{{ manuscript.iiif_manifest_url }}'>{{ manuscript.iiif_manifest_url }}</a></td>
-      </tr>
+      <h3>IIIF Presentation</h3>
+      <iframe src='{% url "kutub:manuscript-iiif" slug=manuscript.slug %}' style="width: 100%; height: 450px;">
+        {{ manuscript }}
+      </iframe>
       {% endif %}
-      {% if manuscript.date %}
-      <tr>
-        <th scope="row">Date</th>
-        <td>{{ manuscript.date }} <span style='font-variant: small-caps;'>ce</span></td>
-      </tr>
-      {% endif %}
-      {% if manuscript.provenance %}
-      <tr>
-        <th scope="row">Provenance</th>
-        <td>{{ manuscript.provenance }}</td>
-      </tr>
-      {% endif %}
-      {% if manuscript.tags.count %}
-      <tr>
-        <th scope="row">Tags</th>
-        <td>
-          {% for tag in manuscript.tags.all %}
-          <a href='{{tag.get_absolute_url}}' class="badge badge-primary">{{tag}}</a>
-          {% endfor %}
-        </td>
-      </tr>
-      {% endif %}
-      {% if manuscript.languages.count %}
-      <tr>
-        <th scope="row">Languages</th>
-        <td>
-          {% for language in manuscript.languages.all %}
-          <a href='{{language.get_absolute_url}}' class="badge badge-primary">{{language}}</a>
-          {% endfor %}
-        </td>
-      </tr>
-      {% endif %}
-      {% if manuscript.scripts.count %}
-      <tr>
-        <th scope="row">Scripts</th>
-        <td>
-          {% for script in manuscript.scripts.all %}
-          <a href='{{script.get_absolute_url}}' class="badge badge-primary">{{script}}</a>
-          {% endfor %}
-        </td>
-      </tr>
-      {% endif %}
-      {% if manuscript.material %}
-      <tr>
-        <th scope="row">Material</th>
-        <td>{{ manuscript.material }}</td>
-      </tr>
-      {% endif %}
-    </tbody>
-  </table>
+    </div>        
+  </details>
 
--->
+  <hr>
+  <details open>
+    <summary ><span>Contents</span></summary>
+    <div class="row">
+      {% grid_attribute manuscript "content_summary" cols=12 %}
+    </div>
+  
+    {% if manuscript.content_set.count %}
+    <h3>Contents</h3>
+    <table class="table">
+      {% for content in manuscript.content_set.all %}
+      <tr>
+        <th scope="row">{{ content.folio_range }}</th>
+        <td>{{ content.description }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% endif %}    
+  </details>
+  <hr>
+  <details open>
+    <summary ><span>Physical Description</span></summary>
+    <div class="row">
+      {% grid_attribute manuscript "support_description" header="Support" cols=3 %}
+    </div>
+    <div class="row">
+      {% grid_attribute manuscript "extent_numeric" cols=3 %}
+      {% grid_attribute manuscript "extent_description" cols=3 %}
+    </div>
+    <div class="row">
+      {% grid_attribute manuscript "dimensions_description" header="Dimensions" cols=6 %}
+      {% grid_attribute manuscript "height" suffix="mm" cols=3 %}
+      {% grid_attribute manuscript "width" suffix="mm" cols=3 %}
+    </div>
+    <div class="row">
+      {% grid_attribute manuscript "collation" cols=3 %}
+      {% grid_attribute manuscript "catchwords" cols=3 %}
+      {% grid_attribute manuscript "signatures" cols=3 %}
+      {% grid_attribute manuscript "foliation" cols=3 %}
+    </div>
+    <div class="row">
+      {% grid_attribute manuscript "layout" cols=3 %}
+      {% grid_attribute manuscript "hand_description" cols=3 %}
+      {% grid_attribute manuscript "decoration_description" cols=3 %}
+      {% grid_attribute manuscript "music_notation" cols=3 %}
+      {% grid_attribute manuscript "binding_description" cols=3 %}
+      {% grid_attribute manuscript "seal_description" cols=3 %}        
+    </div>       
+  </details>
+  <hr>
+  <details open>
+    <summary ><span>History</span></summary>
+    <div class="row">
+      {% grid_attribute manuscript "origin" cols=6 blanktext="—" %}
+      {% grid_attribute manuscript "origin_place" cols=6 %}
+    </div>
+    <div class="row">
+      {% grid_attribute manuscript "origin_date_description" cols=6 %}
+      {% grid_attribute manuscript "origin_date_earliest" cols=3 %}
+      {% grid_attribute manuscript "origin_date_latest" cols=3 %}
+    </div>
+    <div class="row">
+      {% grid_attribute manuscript "provenance" cols=6 %}
+      {% grid_attribute manuscript "acquisition" cols=6 %}
+    </div>
 
+  </details>
+  <hr>
+  <details open>
+    <summary ><span>References</span></summary>
+    {% references_list manuscript %}
+
+
+  </details>
+  <hr>
+  <details>
+    <summary ><span>TEI</span></summary>
+    <a href="./tei" type="button" class="btn btn-primary mb-3"><i class="fas fa-download"></i> Download TEI XML</a>
+    <pre lang="xml" class="xml">{{manuscript.xml_pretty_print}}</pre>
+  </details>
 
 </div>
+
 
 {% endblock %}
