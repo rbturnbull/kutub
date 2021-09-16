@@ -443,10 +443,10 @@ class ContentItem(XMLModel, ReferenceModel, TimeStampedModel, models.Model):
     """
     manuscript = models.ForeignKey(Manuscript, on_delete=models.CASCADE, help_text="The manuscript in which this item is found.")
     locus_description = DescriptionField(tag="locus", docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msloc", help_text="A description identify any reference to one or more folios within a manuscript. If it is empty, it will be filled out by the fields to determin the start and end folios.")
-    start_folio = models.PositiveIntegerField(blank=True, null=True, default=None)
-    start_folio_side = models.CharField(max_length=1, default=Side.UNKNOWN, choices=Side.choices)
-    end_folio = models.PositiveIntegerField(blank=True, null=True, default=None)
-    end_folio_side = models.CharField(max_length=1, blank=True, default=Side.UNKNOWN, choices=Side.choices)
+    start_folio = models.PositiveIntegerField(blank=True, null=True, default=None, help_text='The folio number where this content item begins.')
+    start_folio_side = models.CharField(max_length=1, blank=True, default=Side.UNKNOWN, choices=Side.choices, help_text='The folio side (i.e. recto or verso) where this content item begins.')
+    end_folio = models.PositiveIntegerField(blank=True, null=True, default=None, help_text='The folio number where this content item ends.')
+    end_folio_side = models.CharField(max_length=1, blank=True, default=Side.UNKNOWN, choices=Side.choices, help_text='The folio side (i.e. recto or verso) where this content item ends.')
     defective = models.BooleanField(default=None, null=True, blank=True, help_text="Whether the content item is incomplete through loss or damage.")
     author = DescriptionField(
         tag="author", 

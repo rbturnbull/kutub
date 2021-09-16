@@ -1,0 +1,54 @@
+{% load kutub %}
+
+{% for hidden in content.hidden_fields %}
+{{ hidden }}
+{% if hidden.errors %}
+{% for error in hidden.errors %}
+<div class="alert alert-danger">
+  <strong>(Hidden field {{ hidden.name }}) {{ error }}</strong>
+</div>
+{% endfor %}
+{% endif %}
+{% endfor %}
+
+<div class="formset {{ class }}">
+  <fieldset>
+    <div class="row">
+      {% grid_attribute_form item "title" cols=6 %}
+      {% grid_attribute_form item "summary" cols=4 %}
+      {% grid_attribute_form item "defective" cols=2 %}
+    </div>
+    <div class="row">            
+      {% grid_attribute_form item "locus_description" cols=4 %}
+      {% grid_attribute_form item "start_folio" cols=2 %}
+      {% grid_attribute_form item "start_folio_side" cols=2 %}
+      {% grid_attribute_form item "end_folio" cols=2 %}
+      {% grid_attribute_form item "end_folio_side" cols=2 %}
+    </div>
+    <div class="row">
+      {% grid_attribute_form item "author" cols=6 %}
+      {% grid_attribute_form item "responsibility_statement" cols=6 %}
+    </div>
+    <div class="row">
+      {% grid_attribute_form item "rubric" cols=6 %}
+      {% grid_attribute_form item "incipit" cols=6 %}
+    </div>
+    <div class="row">
+      {% grid_attribute_form item "final_rubric" cols=6 %}
+      {% grid_attribute_form item "explicit" cols=6 %}
+    </div>
+    <div class="row">
+      {% grid_attribute_form item "quote" cols=6 %}
+      {% grid_attribute_form item "colophon" cols=6 %}
+    </div>
+    <div class="row">
+      {% grid_attribute_form item "deco_note" cols=6 %}
+      {% grid_attribute_form item "filiation" cols=6 %}
+    </div>
+    <div class="row">
+      {% grid_attribute_form item "note" cols=12 %}
+    </div>    
+  </fieldset>
+</div>
+
+<hr>

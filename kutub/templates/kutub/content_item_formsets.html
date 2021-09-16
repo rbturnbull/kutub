@@ -1,0 +1,21 @@
+<h3>Content Items</h3>
+{{ form.formsets.content_items.management_form }}
+<div id="{{ form.formsets.content_items.prefix }}-wrapper">
+  {% for item in form.content_items %}
+  <div class="{% cycle 'formset1' 'formset2' %}">
+    {% include 'kutub/content_item_form.html' with item=item %}
+  </div>
+  {% endfor %}
+</div>
+<div id="{{ form.formsets.content_items.prefix }}-empty" style="display: none">
+  <div class="formset-net">
+    {% include 'kutub/content_item_form.html' with item=form.formsets.content_items.empty_form %}
+  </div>
+</div>
+
+<center>
+  <button type="button" class="btn btn-primary add-form" data-tag="{{ form.formsets.content_items.prefix }}"
+    data-toggle="tooltip" data-placement="bottom" title="Add Content Item">
+    <i class="fas fa-plus"></i>
+  </button>
+</center>
