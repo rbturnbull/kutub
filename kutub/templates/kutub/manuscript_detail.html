@@ -13,10 +13,12 @@
   }
   summary {
     outline: none;
-  }
-  summary span {
     color: #18bc9c;
     font-size: 1.5rem;
+    padding-bottom: 10px;
+  }
+  summary span {
+    padding-left: 20px;
   }
 </style>
 {%endaddtoblock %}
@@ -60,7 +62,7 @@
 
   <h1>{{ manuscript }}</h1>
 
-  <details open>
+  <details open class="mt-5">
     <summary ><span>MS. Details</span></summary>
     <div class="row">
       {% grid_attribute manuscript "heading"  cols=6  %}
