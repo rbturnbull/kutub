@@ -28,11 +28,11 @@ class ReadersTests(TestCase):
         self.assertEqual(models.Repository.objects.count(), 2)
         self.assertEqual(
             models.Repository.objects.first().xml_string(),
-            b"<repository><name>Australian National University, Classics Department Museum</name><location><settlement>Canberra</settlement></location></repository>",
+            b"<repository><name>Australian National University, Classics Department Museum</name><location><settlement>Canberra, A.C.T.</settlement></location></repository>",
         )
         self.assertEqual(
             models.Repository.objects.last().xml_string(),
-            b"<repository><name>University of Sydney Library</name><location><settlement>Sydney</settlement></location></repository>",
+            b"<repository><name>University of Sydney Library</name><location><settlement>Sydney, N.S.W.</settlement></location></repository>",
         )
         
         self.assertEqual(models.Manuscript.objects.count(), 2)
