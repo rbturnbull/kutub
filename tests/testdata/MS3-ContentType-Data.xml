@@ -1,0 +1,31 @@
+<msDesc>
+  <msIdentifier>
+    <idno>MS 3</idno>
+  </msIdentifier>
+  <msContents>
+    <msItem n="1">
+      <locus>fol 303v b -</locus>
+      <title>(Prol. to Apocalypse)  </title>
+      <incipit>Iohannes apostolus et euuangelista a deo ihesu christo electus atque dilectus .</incipit>
+      <explicit>et deo magisterii doctrina seruetur</explicit>
+      <note>author attribution Stegmuller, Vol.I, p.306, no.834.</note>
+    </msItem>
+    <msItem n="2">
+      <locus>fol 129v b - </locus>
+      <title>(Prol. to Tobias)  </title>
+      <rubric>CRomatio et heliosodoro (sic) episcopis ieronimus presbyter in domino salutem.</rubric>
+      <incipit>Mirarinon desino exactionis. . .</incipit>
+      <explicit> (130r.a)... dignati complesse. .</explicit>
+      <note>author attribution Migne PL, Vol.XXIX, 23&#226;&#128;&#148;6; Stegm&#195;&#188;ller, Vol.I, p.258, no.332</note>
+    </msItem>
+  </msContents>
+  <additional>
+    <adminInfo>
+      <recordHist>
+        <source>
+          <p>Imported from Europa Inventa (manuscript id: 3).</p>
+        </source>
+      </recordHist>
+    </adminInfo>
+  </additional>
+</msDesc>

@@ -41,4 +41,13 @@
       <p>Purchased at Sotheby's, 13 July 1977.</p>
     </acquisition>
   </history>
+  <additional>
+    <adminInfo>
+      <recordHist>
+        <source>
+          <p>Imported from Europa Inventa (manuscript id: 303).</p>
+        </source>
+      </recordHist>
+    </adminInfo>
+  </additional>
 </msDesc>

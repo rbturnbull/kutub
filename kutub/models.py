@@ -20,6 +20,7 @@ from .fields import DescriptionField
 def clean_xml_string(string):
     return re.sub(u'[^\u0020-\uD7FF\u0009\u000A\u000D\uE000-\uFFFD\U00010000-\U0010FFFF]+', '', string)
 
+
 class XMLModel(models.Model):
     class Meta:
         abstract = True
@@ -242,6 +243,11 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
         docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#mshy",
         help_text="Any descriptive or other information concerning the process by which the manuscript entered the holding institution."
     )
+    source = DescriptionField(
+        tag="source",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msrh",
+        help_text="Describes the original source for the information contained with this manuscript description."
+    )
 
     def __str__(self):
         if self.heading:
@@ -276,7 +282,7 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
         #######################
         contents = etree.Element("msContents")
         if self.content_summary:
-            etree.SubElement(contents, "summary").text = clean_xml_string(self.content_summary)
+            etree.SubElement(contents, "summary").text = self.content_summary
 
         for item_index, item in enumerate(self.contentitem_set.all()):
             item_xml = item.xml_element()
@@ -399,6 +405,17 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
         if self.acquisition:
             etree.SubElement(etree.SubElement(history, "acquisition"), "p").text = self.acquisition
         
+        history = etree.Element("history")
+ 
+        #########################
+        ## Additional
+        #########################
+        if self.source:
+            additional = etree.SubElement(root, "additional")
+            admin = etree.SubElement(additional, "adminInfo")
+            record_history = etree.SubElement(admin, "recordHist")
+            source = etree.SubElement(record_history, "source")
+            etree.SubElement(source, "p").text = self.source
 
         return root
 
@@ -433,6 +450,8 @@ class ContentItem(XMLModel, ReferenceModel, TimeStampedModel, models.Model):
     defective = models.BooleanField(default=None, null=True, blank=True, help_text="Whether the content item is incomplete through loss or damage.")
     author = DescriptionField(
         tag="author", 
+        blank=True,
+        default="",
         docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msat", 
         help_text="The normalized form of an author's name, irrespective of how this form of the name is cited in the manuscript.",
     )
@@ -445,6 +464,10 @@ class ContentItem(XMLModel, ReferenceModel, TimeStampedModel, models.Model):
         tag="title", 
         docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msat", 
         help_text="A regularized form of the item's title, as distinct from any rubric quoted from the manuscript."
+    )
+    summary = DescriptionField(
+        tag="p", 
+        help_text="A summary of the content of this item."
     )
     rubric = DescriptionField(
         tag="rubric", 
@@ -532,6 +555,7 @@ class ContentItem(XMLModel, ReferenceModel, TimeStampedModel, models.Model):
         self.add_sub_element(root, "author")
         self.add_sub_element(root, "responsibility_statement") # should there be sub elements?
         self.add_sub_element(root, "title")
+        self.add_sub_element(root, "summary")
         self.add_sub_element(root, "rubric")
         self.add_sub_element(root, "incipit")
         self.add_sub_element(root, "quote")

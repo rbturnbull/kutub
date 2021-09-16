@@ -13,6 +13,9 @@ def clean_xml_string(string):
     return re.sub(u'[^\u0020-\uD7FF\u0009\u000A\u000D\uE000-\uFFFD\U00010000-\U0010FFFF]+', '', string)
 
 
+def europa_inventa_source_str(ms_id):
+    return f"Imported from Europa Inventa (manuscript id: {ms_id})."
+
 def clean_settlement(settlement):
     substitutions = {
         "Canberra, A.C.T.": "Canberra",
@@ -22,7 +25,7 @@ def clean_settlement(settlement):
 
     return settlement
 
-def import_europa_inventa(manuscripts_csv_path):
+def import_europa_inventa_manuscripts(manuscripts_csv_path):
     with open(manuscripts_csv_path, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
@@ -49,6 +52,8 @@ def import_europa_inventa(manuscripts_csv_path):
             else:
                 dimensions_description = row['dimensions']
 
+            source = europa_inventa_source_str(row['id'])
+
             manuscript, _ = models.Manuscript.objects.update_or_create(
                 repository=repository,
                 identifier=row['library_ref'],
@@ -71,5 +76,50 @@ def import_europa_inventa(manuscripts_csv_path):
                 origin_place=row['orig_place'],
                 provenance=row['provenance'],
                 acquisition=row['acquisition'],
+                source=source,
             )
+
+
+def import_europa_inventa_content_items(csv_path):
+    with open(csv_path, newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+
+            # Only allow XML valid characters
+            for key, value in row.items():
+                if isinstance(value, str):
+                    row[key] = clean_xml_string(value)
+
+            # Get Manuscript
+            manuscript = models.Manuscript.objects.filter(
+                source=europa_inventa_source_str(row['manuscript_id'])
+            ).first()
+            if not manuscript:
+                print(f"Could not find manuscript with id {row['manuscript_id']} for {row}")
+                continue
+
+            # Get Creator
+            # row['creator_id']
+            author = ""
+
+            # Get Language
+            # text_lang
+            
+            # Store ID
+            # id
+
+            models.ContentItem.objects.update_or_create(
+                manuscript=manuscript,
+                locus_description=row['locus'],
+                title=row['title'],
+                author=author,
+                responsibility_statement=row['resp_stmt'],
+                rubric=row['rubric'],
+                incipit=row['incipit'],
+                explicit=row['explicit'],
+                colophon=row['colophon'],
+                summary=row['summary'],
+                note=row['note'],
+            )
+
 

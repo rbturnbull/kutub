@@ -95,20 +95,49 @@
   <details open>
     <summary ><span>Contents</span></summary>
     <div class="row">
-      {% grid_attribute manuscript "content_summary" cols=12 %}
+      {% grid_attribute manuscript "content_summary" cols=12  blanktext="—" %}
     </div>
   
-    {% if manuscript.content_set.count %}
-    <h3>Contents</h3>
-    <table class="table">
-      {% for content in manuscript.content_set.all %}
-      <tr>
-        <th scope="row">{{ content.folio_range }}</th>
-        <td>{{ content.description }}</td>
-      </tr>
+      {% for item in manuscript.contentitem_set.all %}
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            {% grid_attribute item "title" cols=6 %}
+            {% grid_attribute item "summary" cols=6 %}
+          </div>
+          <div class="row">            
+            {% grid_attribute item "locus_description" cols=4 %}
+            <div class="col">
+              {{ item.folio_range }}
+            </div>
+            {% grid_attribute item "defective" cols=2 %}
+          </div>
+          <div class="row">
+            {% grid_attribute item "author" cols=6 %}
+            {% grid_attribute item "responsibility_statement" cols=6 %}
+          </div>
+          <div class="row">
+            {% grid_attribute item "rubric" cols=6 %}
+            {% grid_attribute item "incipit" cols=6 %}
+          </div>
+          <div class="row">
+            {% grid_attribute item "final_rubric" cols=6 %}
+            {% grid_attribute item "explicit" cols=6 %}
+          </div>
+          <div class="row">
+            {% grid_attribute item "quote" cols=6 %}
+            {% grid_attribute item "colophon" cols=6 %}
+          </div>
+          <div class="row">
+            {% grid_attribute item "deco_note" cols=6 %}
+            {% grid_attribute item "filiation" cols=6 %}
+          </div>
+          <div class="row">
+            {% grid_attribute item "note" cols=12 %}
+          </div>
+        </div>
+      </div>      
       {% endfor %}
-    </table>
-    {% endif %}    
   </details>
   <hr>
   <details open>
@@ -130,9 +159,9 @@
       {% grid_attribute manuscript "catchwords" cols=3 %}
       {% grid_attribute manuscript "signatures" cols=3 %}
       {% grid_attribute manuscript "foliation" cols=3 %}
+      {% grid_attribute manuscript "layout" cols=3 %}
     </div>
     <div class="row">
-      {% grid_attribute manuscript "layout" cols=3 %}
       {% grid_attribute manuscript "hand_description" cols=3 %}
       {% grid_attribute manuscript "decoration_description" cols=3 %}
       {% grid_attribute manuscript "music_notation" cols=3 %}

@@ -1,0 +1,22 @@
+<msDesc>
+  <msIdentifier>
+    <idno>MS 1</idno>
+  </msIdentifier>
+  <msContents>
+    <msItem n="1">
+      <locus>fol 1r - 6v</locus>
+      <title>Calendar</title>
+      <incipit>fol 2r primus mandantem </incipit>
+      <note>In blue in the Calendar are 4 April Ambrosius (duplex), 7 July Translation of Thomas Cantuariensis, and in red 13 October Translation of King Edward. The entries in black include 19 January Wulstanus Wigorniensis, 18 March Edward king and martyr (20 June Translation), 20 March Cuthbert (4 September Translation), 3 April Ricardus Cicestrensis (16 June Translation), 19 April Alphegus Can- tuariensis, 19 May Dunstan, 25 May Aldhelmus Shireburnensis, 9 June Translation of Edmundus Rich Cantuariensis, 22 June Alban, 4 July Translation and Ordination of Martin, 15 July Translation of Swithunus, l7 July Kenelmus (Gloucester), 16 October Michael in monte.</note>
+    </msItem>
+  </msContents>
+  <additional>
+    <adminInfo>
+      <recordHist>
+        <source>
+          <p>Imported from Europa Inventa (manuscript id: 1).</p>
+        </source>
+      </recordHist>
+    </adminInfo>
+  </additional>
+</msDesc>

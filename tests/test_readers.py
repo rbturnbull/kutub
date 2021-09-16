@@ -21,9 +21,9 @@ class ReadersTests(TestCase):
         
         self.assertEqual( string, file_string )
 
-    def test_import_europa_inventa(self):
+    def test_import_europa_inventa_manuscripts(self):
         csv_path = test_data_dir()/"europa-inventa-manuscripts-head.csv"
-        readers.import_europa_inventa(csv_path)
+        readers.import_europa_inventa_manuscripts(csv_path)
         
         self.assertEqual(models.Repository.objects.count(), 2)
         self.assertEqual(
@@ -45,3 +45,29 @@ class ReadersTests(TestCase):
             "Sydney-Nicholson6.xml",
         )
                 
+    def test_import_europa_inventa_content_items(self):
+        manuscript1 = models.Manuscript.objects.create(
+            identifier="MS 1",
+            source=readers.europa_inventa_source_str(1),
+        )
+        manuscript3 = models.Manuscript.objects.create(
+            identifier="MS 3",
+            source=readers.europa_inventa_source_str(3),
+        )
+
+        csv_path = test_data_dir()/"europa-inventa-items-head.csv"
+        readers.import_europa_inventa_content_items(csv_path)
+        
+        gold_mss = [manuscript1, manuscript3, manuscript3]
+        for content_item, gold_ms in zip(models.ContentItem.objects.all(), gold_mss):
+            self.assertEqual( content_item.manuscript.id, gold_ms.id )
+
+        self.assertEqual(models.ContentItem.objects.count(), 3)
+        self.assert_string_equals_file( 
+            manuscript1.xml_pretty_print(),
+            "MS1-ContentType-Data.xml",
+        )
+        self.assert_string_equals_file( 
+            manuscript3.xml_pretty_print(),
+            "MS3-ContentType-Data.xml",
+        )        
