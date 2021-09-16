@@ -21,10 +21,12 @@
       <tr>
         <th scope="col">Manuscript</th>
         <th scope="col">Repository</th>
+        <!--
         <th scope="col">Date <span style='font-variant: small-caps;'>ce</span></th>
         <th scope="col">Languages</th>
         <th scope="col">Scripts</th>
         <th scope="col">Dimensions</th>
+        -->
       </tr>
     </thead>
     <tbody>
@@ -32,6 +34,7 @@
       <tr>
         <th scope="row"><a href="{{ manuscript.get_absolute_url }}">{{ manuscript }}</a></th>
         <td><a href="{{ manuscript.repository.get_absolute_url }}">{{ manuscript.repository }}</a></td>
+        <!--
         <td>{{ manuscript.date }}</td>
         <td>
           {% for language in manuscript.languages.all %}
@@ -44,10 +47,12 @@
           {% endfor %}
         </td>
         <td>{{ manuscript|dimensions }}</td>
+        -->
       </tr>
       {% endfor %}
     </tbody>
   </table>
+  {% include 'kutub/pagination.html' %}
 </div>
 
 {% endblock %}

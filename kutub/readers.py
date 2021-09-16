@@ -18,12 +18,26 @@ def europa_inventa_source_str(ms_id):
 
 def clean_settlement(settlement):
     substitutions = {
-        "Canberra, A.C.T.": "Canberra",
+        "Canberra": "Canberra, A.C.T.",
+        "Sydney": "Sydney, N.S.W.",
+        "Box Hill": "Box Hill, Victoria",
+        "Sydney, in the University of Sydney": "Sydney, N.S.W.",
     }
     if settlement in substitutions:
         settlement = substitutions[settlement]
 
     return settlement
+
+def clean_repositories(repository):
+    substitutions = {
+        "Public Library of New South Wales, Dixson Library": "State Library of New South Wales, Dixson Library",
+        "Mitchell Library, Special Collections": "State Library of New South Wales, Mitchell Library, Special Collections",
+        "Mitchell Library, Special Collections, State Library of New South Wales": "State Library of New South Wales, Mitchell Library, Special Collections",
+    }
+    if repository in substitutions:
+        repository = substitutions[repository]
+
+    return repository
 
 def import_europa_inventa_manuscripts(manuscripts_csv_path):
     with open(manuscripts_csv_path, newline='') as csvfile:
@@ -38,7 +52,7 @@ def import_europa_inventa_manuscripts(manuscripts_csv_path):
             print( f"{row['repository']} {row['library_ref']}")
             repository, _ = models.Repository.objects.update_or_create(
                 settlement=clean_settlement(row['settlement']),
-                identifier=row['repository'],
+                identifier=clean_repositories(row['repository']),
             )
 
             height, width = None, None
