@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import RegexValidator
 
 class DescriptionField(models.TextField):
     description = "A text field that can corresponds to a TEI element."
@@ -13,6 +14,12 @@ class DescriptionField(models.TextField):
         self.docs = docs
         kwargs['default'] = default
         kwargs['blank'] = blank
+        validators = kwargs.get('validators') or []
+        if len(validators) == 0: # if there are validators, then we should check if one of the validators is one for XML chars.
+            validators.append(
+                RegexValidator(u'^[\u0020-\uD7FF\u0009\u000A\u000D\uE000-\uFFFD\U00010000-\U0010FFFF]*$', 'Only valid XML characters allowed.')
+            )
+        kwargs['validators'] = validators
         super().__init__(*args, **kwargs)
 
     def reference_url(self):

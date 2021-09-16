@@ -9,7 +9,8 @@ def test_data_dir():
 
 class ReadersTests(TestCase):
     def assert_string_equals_file(self, string, filename, generate=True):
-        string = string.decode("utf-8") 
+        if hasattr(string, 'decode'):
+            string = string.decode("utf-8") 
         path = test_data_dir()/filename
         if generate:
             with open(path, 'w') as f:

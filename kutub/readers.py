@@ -4,6 +4,15 @@ import re
 from . import models
 
 
+def clean_xml_string(string):
+    """ 
+    Removes characters not valid in XML standard.
+
+    https://stackoverflow.com/a/8735509 
+    """
+    return re.sub(u'[^\u0020-\uD7FF\u0009\u000A\u000D\uE000-\uFFFD\U00010000-\U0010FFFF]+', '', string)
+
+
 def clean_settlement(settlement):
     substitutions = {
         "Canberra, A.C.T.": "Canberra",
@@ -17,6 +26,12 @@ def import_europa_inventa(manuscripts_csv_path):
     with open(manuscripts_csv_path, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
+
+            # Only allow XML valid characters
+            for key, value in row.items():
+                if isinstance(value, str):
+                    row[key] = clean_xml_string(value)
+
             print( f"{row['repository']} {row['library_ref']}")
             repository, _ = models.Repository.objects.update_or_create(
                 settlement=clean_settlement(row['settlement']),
