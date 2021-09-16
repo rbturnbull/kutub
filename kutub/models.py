@@ -167,7 +167,11 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
 
     Help text for fields frequently draws on the text if this document.
     """
-    heading = DescriptionField(tag="head", docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msdo", help_text="A brief description of the manuscript (for example, the title).")
+    heading = DescriptionField(
+        tag="head", 
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msdo", 
+        help_text="A brief description of the manuscript (for example, the title)."
+    )
     identifier = models.CharField(max_length=255, help_text="The identifier of the manuscript.")
     alt_identifier = models.CharField(max_length=255, default="", blank=True, help_text="An alternative identifier of the manuscript.")
     repository = models.ForeignKey(
@@ -178,7 +182,11 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
         on_delete=models.SET_DEFAULT, 
         help_text="The repository where this manuscript is held."
     )    
-    content_summary = DescriptionField(tag="summary", docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msco", help_text="A summary of the intellectual content in this manuscript. More details can be added below.")
+    content_summary = DescriptionField(
+        tag="summary", 
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msco", 
+        help_text="A summary of the intellectual content in this manuscript. More details can be added below."
+    )
     # Physical Description
     support_description = DescriptionField(
         tag="supportDesc",
@@ -186,25 +194,73 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
         help_text="A description of the physical support for the written part of a manuscript.",
     )    
     extent_numeric = models.PositiveIntegerField(default=None, null=True, blank=True, help_text="The number of leaves in the manuscript as an integer.")
-    extent_description = DescriptionField(help_text="A description of the number of leaves in the manuscript.")
+    extent_description = DescriptionField(
+        tag="extent",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msph1ext",
+        help_text="A description of the number of leaves in the manuscript.",
+    )
     height = models.PositiveIntegerField(default=None, blank=True, null=True, help_text="The measurement of the manuscript leaves in millimetres along the axis parallel to its bottom, e.g. perpendicular to the spine of a book or codex.")
     width = models.PositiveIntegerField(default=None, blank=True, null=True, help_text="The measurement in millimetres leaves along the axis at a right angle to the bottom of the manuscript.")
-    dimensions_description = DescriptionField(help_text="A description of the dimensions of the leaves which can be used if the basic height and width values are not sufficient.")
+    dimensions_description = DescriptionField(
+        tag="dimensions",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msph1ext",
+        help_text="A description of the dimensions of the leaves which can be used if the basic height and width values are not sufficient."
+    )
     collation = DescriptionField(
         tag="collation",
         docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msph1col",
         help_text="A description of the arrangement of the leaves and quires of the manuscript.",
     )
-    catchwords = DescriptionField(help_text="The system used to ensure correct ordering of the quires or similar making up a codex, typically by means of annotations at the foot of the page.")
-    signatures = DescriptionField(help_text="A description of the leaf or quire signatures found within a codex.")
-    foliation = DescriptionField(help_text="The scheme, medium or location of folio, page, column, or line numbers written in the manuscript, frequently including a statement about when and, if known, by whom, the numbering was done.")
-    condition = DescriptionField(help_text="A summary of the overall physical state of a manuscript, in particular where such information is not recorded elsewhere in the description.")
-    layout = DescriptionField(help_text="How how text is laid out on the page or surface of the manuscript, including information about any ruling, pricking, or other evidence of page-preparation techniques.")
-    hand_description = DescriptionField(help_text="A description of all the different hands used in the manuscript.")
-    decoration_description = DescriptionField(help_text="A description of the decoration of the manuscript.")
-    music_notation = DescriptionField(help_text="A description of the type of musical notation.")
-    binding_description = DescriptionField(help_text="A description of the state of the present and former bindings of a manuscript, including information about its material, any distinctive marks, and provenance information.")
-    seal_description = DescriptionField(help_text="information about the seal(s) attached to documents to guarantee their integrity, or to show authentication of the issuer or consent of the participants.")
+    catchwords = DescriptionField(
+        tag="catchwords",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msmisc",
+        help_text="The system used to ensure correct ordering of the quires or similar making up a codex, typically by means of annotations at the foot of the page.",
+    )
+    signatures = DescriptionField(
+        tag="signatures",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msmisc",
+        help_text="A description of the leaf or quire signatures found within a codex.",
+    )
+    foliation = DescriptionField(
+        tag="foliation",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msphfo",
+        help_text="The scheme, medium or location of folio, page, column, or line numbers written in the manuscript, frequently including a statement about when and, if known, by whom, the numbering was done.",
+    )
+    condition = DescriptionField(
+        tag="condition",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msphco",
+        help_text="A summary of the overall physical state of a manuscript, in particular where such information is not recorded elsewhere in the description.",
+    )
+    layout = DescriptionField(
+        tag="layout",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msphla",
+        help_text="How how text is laid out on the page or surface of the manuscript, including information about any ruling, pricking, or other evidence of page-preparation techniques.",
+    )
+    hand_description = DescriptionField(
+        tag="handDesc",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msphwr",
+        help_text="A description of all the different hands used in the manuscript.",
+    )
+    decoration_description = DescriptionField(
+        tag="decoDesc",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msphdec",
+        help_text="A description of the decoration of the manuscript.",
+    )
+    music_notation = DescriptionField(
+        tag="musicNotation",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msphmu",
+        help_text="A description of the type of musical notation.",
+    )
+    binding_description = DescriptionField(
+        tag="bindingDesc",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msphbi",
+        help_text="A description of the state of the present and former bindings of a manuscript, including information about its material, any distinctive marks, and provenance information.",
+    )
+    seal_description = DescriptionField(
+        tag="sealDesc",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msphse",
+        help_text="information about the seal(s) attached to documents to guarantee their integrity, or to show authentication of the issuer or consent of the participants.",
+    )
     # History
     origin = DescriptionField(
         tag="origin",
@@ -442,7 +498,11 @@ class ContentItem(XMLModel, ReferenceModel, TimeStampedModel, models.Model):
     https://tei-c.org/release/doc/tei-p5-doc/en/html/ref-msItem.html
     """
     manuscript = models.ForeignKey(Manuscript, on_delete=models.CASCADE, help_text="The manuscript in which this item is found.")
-    locus_description = DescriptionField(tag="locus", docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msloc", help_text="A description identify any reference to one or more folios within a manuscript. If it is empty, it will be filled out by the fields to determin the start and end folios.")
+    locus_description = DescriptionField(
+        tag="locus", 
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msloc", 
+        help_text="A description identify any reference to one or more folios within a manuscript. If it is empty, it will be filled out by the fields to determin the start and end folios."
+    )
     start_folio = models.PositiveIntegerField(blank=True, null=True, default=None, help_text='The folio number where this content item begins.')
     start_folio_side = models.CharField(max_length=1, blank=True, default=Side.UNKNOWN, choices=Side.choices, help_text='The folio side (i.e. recto or verso) where this content item begins.')
     end_folio = models.PositiveIntegerField(blank=True, null=True, default=None, help_text='The folio number where this content item ends.')

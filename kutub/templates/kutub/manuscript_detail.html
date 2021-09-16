@@ -139,22 +139,27 @@
       {% grid_attribute manuscript "width" suffix="mm" cols=3 %}
     </div>
     <div class="row">
-      {% grid_attribute manuscript "collation" cols=3 %}
-      {% grid_attribute manuscript "catchwords" cols=3 %}
-      {% grid_attribute manuscript "signatures" cols=3 %}
-      {% grid_attribute manuscript "foliation" cols=3 %}
+      {% grid_attribute manuscript "collation"  %}
+      {% grid_attribute manuscript "catchwords"  %}
+    </div>
+    <div class="row">
+      {% grid_attribute manuscript "signatures"  %}
+      {% grid_attribute manuscript "foliation"  %}
     </div>
     <div class="row">
       {% grid_attribute manuscript "layout" %}
       {% grid_attribute manuscript "hand_description" %}
     </div>
     <div class="row">
-      {% grid_attribute manuscript "decoration_description" cols=3 %}
-      {% grid_attribute manuscript "music_notation" cols=3 %}
-      {% grid_attribute manuscript "binding_description" cols=3 %}
-      {% grid_attribute manuscript "seal_description" cols=3 %}        
+      {% grid_attribute manuscript "decoration_description"  %}
+      {% grid_attribute manuscript "music_notation"  %}
+    </div>
+    <div class="row">
+      {% grid_attribute manuscript "binding_description"  %}
+      {% grid_attribute manuscript "seal_description" %}        
     </div>       
   </details>
+
   <hr>
   <details open>
     <summary ><span>History</span></summary>
@@ -173,11 +178,13 @@
     </div>
 
   </details>
+
   <hr>
   <details open>
     <summary ><span>References</span></summary>
     {% references_list manuscript %}
   </details>
+
   <hr>
   <details>
     <summary ><span>TEI</span></summary>

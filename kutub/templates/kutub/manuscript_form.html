@@ -64,20 +64,24 @@
           {% grid_attribute_form form "width" suffix="mm" cols=3 %}
         </div>
         <div class="row">
-          {% grid_attribute_form form "collation"  cols=3 %}
-          {% grid_attribute_form form "catchwords" cols=3 %}
-          {% grid_attribute_form form "signatures" cols=3 %}
-          {% grid_attribute_form form "foliation" cols=3 %}
+          {% grid_attribute_form form "collation"  %}
+          {% grid_attribute_form form "catchwords" %}
+        </div>
+        <div class="row">
+          {% grid_attribute_form form "signatures" %}
+          {% grid_attribute_form form "foliation" %}
         </div>
         <div class="row">
           {% grid_attribute_form form "layout"  %}
           {% grid_attribute_form form "hand_description"  %}
         </div>
         <div class="row">
-          {% grid_attribute_form form "decoration_description"  cols=3 %}
-          {% grid_attribute_form form "binding_description" cols=3 %}
-          {% grid_attribute_form form "music_notation" cols=3 %}
-          {% grid_attribute_form form "seal_description" cols=3 %}        
+          {% grid_attribute_form form "decoration_description"  %}
+          {% grid_attribute_form form "binding_description" %}
+        </div>
+        <div class="row">
+          {% grid_attribute_form form "music_notation" %}
+          {% grid_attribute_form form "seal_description" %}        
         </div>       
       </details>        
       <details open>
