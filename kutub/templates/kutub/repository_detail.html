@@ -1,8 +1,27 @@
 {% extends 'base.html' %}
 
-{% load static i18n compress kutub cms_tags publication_extras %}
+{% load sekizai_tags static i18n compress kutub cms_tags publication_extras %}
 
 {% block content %}
+
+{% addtoblock "css" %}
+<style>
+  .xml {
+    background-color: rgb(255, 245, 233);
+    padding: 20px;
+  }
+  summary {
+    outline: none;
+    color: #18bc9c;
+    font-size: 1.5rem;
+    padding-bottom: 10px;
+  }
+  summary span {
+    padding-left: 20px;
+  }
+</style>
+{%endaddtoblock %}
+
 
 <div class="container">
 
@@ -36,25 +55,48 @@
     </div>
 
     <h1>{{ repository }}</h1>
-    <ul>
-        {% for document in repository.document_set.all %}
-            <li><a href='{{ document.get_absolute_url }}'>{{ document }}</a></li>
-        {% endfor %}
-    </ul>
 
-    <h2>Location</h2>
-    {% if repository.location_description %}
-        <p>{{repository.location_description}}</p>
-    {% endif %}
-    {% if repository.settlement %}
-        <p>{{repository.settlement}}</p>
-    {% endif %}
+    <div class="row">
+      {% grid_attribute repository "identifier"  cols=6  %}
+      {% grid_attribute repository "url"  cols=6  %}
+    </div>
+
+
+    <div class="row">
+      {% grid_attribute repository "location_description"  cols=3  %}
+      {% grid_attribute repository "settlement"  cols=3  %}
+      {% grid_attribute repository "latitude"  cols=3  %}
+      {% grid_attribute repository "longitude"  cols=3  %}
+    </div>
+  
     {% if repository.repository.has_coords %}
         {% include 'kutub/repository_map_iframe.html' with repository=repository %}
     {% endif %}
 
-    <h3>References</h3>
-    {% references_list repository %}
-
+    <hr>
+    <details open>
+      <summary ><span>Manuscripts</span></summary>
+      <ul>
+        {% for manuscript in repository.manuscript_set.all %}
+          <li><a href='{{ manuscript.get_absolute_url }}'>{{ manuscript }}</a></li>
+        {% endfor %}
+      </ul>
+  
+  
+    </details>
+    <hr>
+    <details open>
+      <summary ><span>References</span></summary>
+      {% references_list repository %}
+  
+  
+    </details>
+    <hr>
+    <details>
+      <summary ><span>TEI</span></summary>
+      <a href="./tei" type="button" class="btn btn-primary mb-3"><i class="fas fa-download"></i> Download TEI XML</a>
+      <pre lang="xml" class="xml">{{repository.xml_pretty_print}}</pre>
+    </details>
+  
 </div>
 {% endblock %}
