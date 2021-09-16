@@ -51,10 +51,7 @@ def dimensions(manuscript):
 
 @register.filter(name='help_text')
 def help_text(obj, field_name):
-    for field in obj._meta.fields:
-        if field.name == field_name:
-            return field.help_text
-    return ""
+    return obj.field_help(field_name)
 
 @register.filter(name='help_text_tooltip')
 def help_text_tooltip(obj, field_name, placement="bottom"):
@@ -69,7 +66,28 @@ def attribute_row(object, field_name, suffix="", header=""):
         'field_name': field_name,
         'value': getattr(object, field_name),
         'placement': "bottom",
-        "help_text": help_text(object, field_name),
+        "help_text": object.field_help(field_name),
         "suffix": suffix,
         "header": header,
     }
+
+
+@register.inclusion_tag('kutub/grid_attribute.html')
+def grid_attribute(object, field_name, suffix="", header="", cols=12, url="", blanktext=""):
+    header = header or field_name.replace("_", " ").title()
+    value = getattr(object, field_name) or blanktext
+    return {
+        'object': object,
+        'field_name': field_name,
+        'value': value,
+        'placement': "bottom",
+        "help_text": object.field_help(field_name),
+        "docs": object.field_docs(field_name),
+        "tag": object.field_tag(field_name),
+        "suffix": suffix,
+        "header": header,
+        "cols": cols,
+        "url": url,
+    }
+
+

@@ -23,6 +23,7 @@ urlpatterns = [
     path("mss/", views.ManuscriptListView.as_view(), name="manuscript-list"),
     path("mss/create/", views.ManuscriptCreateView.as_view(), name="manuscript-create"),
     path("mss/<str:slug>/", views.ManuscriptDetailView.as_view(), name="manuscript-detail"),
+    path("mss/<str:slug>/tei/", views.ManuscriptTEIView.as_view(), name="manuscript-tei"),
     path("mss/<str:slug>/iiif/", views.ManuscriptIIIFManifestView.as_view(), name="manuscript-iiif"),
     path("mss/<str:slug>/update/", views.ManuscriptUpdateView.as_view(), name="manuscript-update"),
 

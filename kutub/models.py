@@ -1,3 +1,4 @@
+import re
 from lxml import etree
 
 from django.db import models
@@ -16,6 +17,9 @@ from .fields import DescriptionField
 # def DescriptionField(**kwargs):
 #     return models.TextField(default="", blank=True, **kwargs)
 
+def clean_xml_string(string):
+    return re.sub(u'[^\u0020-\uD7FF\u0009\u000A\u000D\uE000-\uFFFD\U00010000-\U0010FFFF]+', '', string)
+
 class XMLModel(models.Model):
     class Meta:
         abstract = True
@@ -29,6 +33,9 @@ class XMLModel(models.Model):
     def xml_string(self, **kwargs):
         return etree.tostring(self.xml_element(), **kwargs)
 
+    def xml_pretty_print(self, **kwargs):
+        return self.xml_string(pretty_print=True).decode("utf-8")
+
     def add_sub_element(self, parent, field_name):
         value = getattr(self, field_name)
         if value:
@@ -38,6 +45,23 @@ class XMLModel(models.Model):
                     tag = field.tag
 
             etree.SubElement(parent, tag).text = value
+
+    def field_attr(self, field_name, attribute):
+        field = self._meta.get_field(field_name)
+        if hasattr(field, attribute):
+            return getattr(field, attribute)
+
+    def help_text(self, field_name):
+        return self.field_attr( field_name, "help_text")
+
+    def field_help(self, field_name):
+        return self.field_attr( field_name, "help_text")
+
+    def field_docs(self, field_name):
+        return self.field_attr( field_name, "docs")
+
+    def field_tag(self, field_name):
+        return self.field_attr( field_name, "tag")
 
 
 class NextPrevMixin(models.Model):
@@ -142,6 +166,9 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
 
     Help text for fields frequently draws on the text if this document.
     """
+    heading = DescriptionField(tag="head", docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msdo", help_text="A brief description of the manuscript (for example, the title).")
+    identifier = models.CharField(max_length=255, help_text="The identifier of the manuscript.")
+    alt_identifier = models.CharField(max_length=255, default="", blank=True, help_text="An alternative identifier of the manuscript.")
     repository = models.ForeignKey(
         Repository, 
         default=None, 
@@ -150,17 +177,23 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
         on_delete=models.SET_DEFAULT, 
         help_text="The repository where this manuscript is held."
     )    
-    identifier = models.CharField(max_length=255, help_text="The identifier of the manuscript.")
-    alt_identifier = models.CharField(max_length=255, default="", blank=True, help_text="An alternative identifier of the manuscript.")
-    heading = DescriptionField(tag="head", docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msdo", help_text="A brief description of the manuscript (for example, the title).")
     content_summary = DescriptionField(tag="summary", docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msco", help_text="A summary of the intellectual content in this manuscript. More details can be added below.")
-    support_description = DescriptionField(help_text="A description of the physical support for the written part of a manuscript.")    
+    # Physical Description
+    support_description = DescriptionField(
+        tag="supportDesc",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msph1sup",
+        help_text="A description of the physical support for the written part of a manuscript.",
+    )    
     extent_numeric = models.PositiveIntegerField(default=None, null=True, blank=True, help_text="The number of leaves in the manuscript as an integer.")
     extent_description = DescriptionField(help_text="A description of the number of leaves in the manuscript.")
     height = models.PositiveIntegerField(default=None, blank=True, null=True, help_text="The measurement of the manuscript leaves in millimetres along the axis parallel to its bottom, e.g. perpendicular to the spine of a book or codex.")
     width = models.PositiveIntegerField(default=None, blank=True, null=True, help_text="The measurement in millimetres leaves along the axis at a right angle to the bottom of the manuscript.")
     dimensions_description = DescriptionField(help_text="A description of the dimensions of the leaves which can be used if the basic height and width values are not sufficient.")
-    collation = DescriptionField(help_text="A description of the arrangement of the leaves and quires of the manuscript.")
+    collation = DescriptionField(
+        tag="collation",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msph1col",
+        help_text="A description of the arrangement of the leaves and quires of the manuscript.",
+    )
     catchwords = DescriptionField(help_text="The system used to ensure correct ordering of the quires or similar making up a codex, typically by means of annotations at the foot of the page.")
     signatures = DescriptionField(help_text="A description of the leaf or quire signatures found within a codex.")
     foliation = DescriptionField(help_text="The scheme, medium or location of folio, page, column, or line numbers written in the manuscript, frequently including a statement about when and, if known, by whom, the numbering was done.")
@@ -209,6 +242,12 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
         docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#mshy",
         help_text="Any descriptive or other information concerning the process by which the manuscript entered the holding institution."
     )
+
+    def __str__(self):
+        if self.heading:
+            return self.heading
+
+        return f"{self.repository} {self.identifier}".strip()
     
     class Meta:
         ordering = ["repository","identifier"]
@@ -237,7 +276,7 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
         #######################
         contents = etree.Element("msContents")
         if self.content_summary:
-            etree.SubElement(contents, "summary").text = self.content_summary
+            etree.SubElement(contents, "summary").text = clean_xml_string(self.content_summary)
 
         for item_index, item in enumerate(self.contentitem_set.all()):
             item_xml = item.xml_element()

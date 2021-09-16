@@ -1,0 +1,24 @@
+{% if value %}
+  <div class="{% if cols %}col-sm-{{ cols }}{%endif%} padding mt-2 mb-2" >
+    <label>{{ header }}</label>
+    <span>
+      {% if docs %}
+      <a href='{{ docs }}' target='_blank' >
+      {% endif %}
+      <label class='ml-3' data-toggle="tooltip" data-placement="{{placement}}" title="{{help_text}}" {% if docs %}style='cursor: pointer !important;'{% endif %}>
+        <i class="fas fa-info-circle"></i>
+      </label>
+      {% if docs %}
+      </a>
+      {% endif %}
+    </span>    
+    <br>
+    {% if url %}
+    <a href='{{ url }}'>
+    {% endif %}
+    {{ value }} {{ suffix }}
+    {% if url %}
+    </a>
+    {% endif %}
+  </div>
+{% endif %}

@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, TemplateView
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.http import HttpResponse
+
 from reversion.views import RevisionMixin
 
 from . import models, forms
 
 PAGINATION = 30
-
 
 class TitleFromObjectMixin():
     def get_context_data(self, **kwargs):
@@ -80,6 +81,12 @@ class ManuscriptListView(ManuscriptView, ListView):
 
 class ManuscriptDetailView(TitleFromObjectMixin, ManuscriptView, DetailView):
     pass
+
+
+class ManuscriptTEIView(ManuscriptDetailView):
+    def get(self, request, *args, **kwargs):
+        object = self.get_object()
+        return HttpResponse(object.xml_pretty_print(), content_type='text/xml')
 
 
 class ManuscriptIIIFManifestView(ManuscriptDetailView):

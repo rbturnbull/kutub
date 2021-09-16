@@ -36,11 +36,11 @@ class ReadersTests(TestCase):
         
         self.assertEqual(models.Manuscript.objects.count(), 2)
         self.assert_string_equals_file( 
-            models.Manuscript.objects.first().xml_string(pretty_print=True),
+            models.Manuscript.objects.first().xml_pretty_print(),
             "ANU-77-06.xml",
         )
         self.assert_string_equals_file( 
-            models.Manuscript.objects.last().xml_string(pretty_print=True),
+            models.Manuscript.objects.last().xml_pretty_print(),
             "Sydney-Nicholson6.xml",
         )
                 
