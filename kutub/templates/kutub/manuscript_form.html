@@ -119,7 +119,7 @@
       let total_form = $('#id_' + tag + '-TOTAL_FORMS');
       let form_idx = total_form.val();
       $('#' + tag + '-wrapper').append($('#' + tag + '-empty').html().replace(/__prefix__/g, form_idx));
-      Tagulous.select2($("#id_" + tag + "-" + form_idx + "-category"), true);
+      // Tagulous.select2($("#id_" + tag + "-" + form_idx + "-category"), true);
 
       total_form.val(parseInt(form_idx) + 1);
       setupForms();

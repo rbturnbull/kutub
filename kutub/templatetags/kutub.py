@@ -91,7 +91,10 @@ def grid_attribute(object, field_name, suffix="", header="", cols=None, url="", 
     }
 
 @register.inclusion_tag('kutub/grid_attribute_form.html')
-def grid_attribute_form(form, field_name, cols=None, header="", suffix=""):
+def grid_attribute_form(form, field_name, cols=None, header="", suffix="", url="", blanktext=""):
+    """
+    header and suffix are ignored. They are defined just to make the arguments compatible with grid_attribute
+    """
     field = form[field_name]
     docs = getattr(field.field, 'docs') if hasattr(field.field, 'docs') else ""
     return {
@@ -100,19 +103,4 @@ def grid_attribute_form(form, field_name, cols=None, header="", suffix=""):
         'docs': docs,
         'placement': "bottom",
     }
-
-
-@register.inclusion_tag('kutub/grid_attribute_form.html')
-def grid_attribute_form2(form, field_name, cols=None, header="", suffix="", field=None):
-    
-    field = form[field_name]
-
-    docs = getattr(field.field, 'docs') if field.field and hasattr(field, 'docs') else ""
-    return {
-        'field': field,
-        'cols': cols,
-        'docs': docs,
-        'placement': "bottom",
-    }
-
 

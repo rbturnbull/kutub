@@ -1,6 +1,6 @@
 {% load kutub %}
 
-{% for hidden in content.hidden_fields %}
+{% for hidden in item.hidden_fields %}
 {{ hidden }}
 {% if hidden.errors %}
 {% for error in hidden.errors %}
@@ -10,6 +10,8 @@
 {% endfor %}
 {% endif %}
 {% endfor %}
+<div class="card">
+  <div class="card-body">
 
 <div class="formset {{ class }}">
   <fieldset>
@@ -50,5 +52,5 @@
     </div>    
   </fieldset>
 </div>
-
-<hr>
+</div>
+</div>
