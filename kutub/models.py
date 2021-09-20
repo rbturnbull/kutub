@@ -579,6 +579,9 @@ class ContentItem(XMLModel, ReferenceModel, TimeStampedModel, models.Model):
     class Meta:
         ordering = ["manuscript", "start_folio", "end_folio_side", "end_folio", "end_folio_side", "author", "title"]
 
+    def get_absolute_url(self):
+        return self.manuscript.get_absolute_url()
+
     def folio_range(self):
         start_folio = self.start_folio or ""
         end_folio = self.end_folio or ""

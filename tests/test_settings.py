@@ -8,6 +8,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     "django.contrib.contenttypes",
     'django.contrib.sites',
+    "watson",
     "publications",
     "kutub",
     "tests",
@@ -33,3 +34,4 @@ DATABASES = {
 
 SITE_ID = 1
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+ROOT_URLCONF = "tests.urls"

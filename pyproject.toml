@@ -16,6 +16,8 @@ django-reversion = "^4.0.0"
 django-superform = {git = "https://github.com/Chirurgus/django-superform"}
 django-pandas = "^0.6.4"
 django-partial-date = {git = "https://github.com/rbturnbull/django_partial_date.git"}
+django-watson = "^1.5.5"
+django-crispy-forms = "^1.12.0"
 
 [tool.poetry.dev-dependencies]
 coverage = "^5.5"
