@@ -46,6 +46,7 @@
         <div class="row">
           {% grid_attribute_form form "content_summary" cols=12  %}
         </div>
+        {% include 'kutub/text_language_form.html' with form=form %}
         {% include 'kutub/content_item_formsets.html' %}
       </details>      
       <hr>

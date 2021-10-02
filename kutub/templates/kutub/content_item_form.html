@@ -20,6 +20,7 @@
       {% grid_attribute_form item "summary" cols=4 %}
       {% grid_attribute_form item "defective" cols=2 %}
     </div>
+    {% include 'kutub/text_language_form.html' with form=item %}
     <div class="row">            
       {% grid_attribute_form item "locus_description" cols=4 %}
       {% grid_attribute_form item "start_folio" cols=2 %}
