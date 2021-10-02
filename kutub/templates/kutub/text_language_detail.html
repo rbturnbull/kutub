@@ -1,0 +1,21 @@
+{% load kutub %}
+<div class="row">            
+    {% grid_attribute object "text_language_description" cols=6 %}
+    {% grid_attribute object "main_language" cols=3 %}
+    {% if object.other_languages.count %}
+        <div class="col-sm-3 padding mt-2 mb-2" >
+            <label>Other Languages</label>
+            <span>
+              <a href='https://tei-c.org/release/doc/tei-p5-doc/en/html/ref-textLang.html' target='_blank' >
+              <label class='ml-3' data-toggle="tooltip" data-placement="{{placement}}" title="{{help_text}}" style='cursor: pointer !important;'>
+                <i class="fas fa-info-circle"></i>
+              </label>
+              </a>
+            </span>    
+            <br>
+            {% for language in object.other_languages.all %}
+            {{ language }}
+            {% endfor %}
+          </div>
+    {% endif %}
+  </div>

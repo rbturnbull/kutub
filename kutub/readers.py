@@ -4,7 +4,76 @@ import pandas as pd
 from lxml import etree
 
 
+
 from . import models
+
+
+def interpret_text_language(object, language_description):
+    if language_description.endswith("."):
+        language_description = language_description[:-1]
+
+    def latin():
+        return models.Language.objects.update_or_create(description="Latin", language_subtag="la")[0]
+
+    def german():
+        return models.Language.objects.update_or_create(description="German", language_subtag="de")[0]
+
+    def french():
+        return models.Language.objects.update_or_create(description="French", language_subtag="fr")[0]
+
+    def spanish():
+        return models.Language.objects.update_or_create(description="Spanish", language_subtag="es")[0]
+
+    def italian():
+        return models.Language.objects.update_or_create(description="Italian", language_subtag="it")[0]
+
+    def dutch():
+        return models.Language.objects.update_or_create(description="Dutch", language_subtag="nl")[0]
+
+    def english():
+        return models.Language.objects.update_or_create(description="English", language_subtag="en")[0]
+
+    def hebrew():
+        return models.Language.objects.update_or_create(description="Hebrew", language_subtag="he")[0]
+
+    def ancient_greek():
+        return models.Language.objects.update_or_create(description="Ancient Greek (to 1453)", language_subtag="grc")[0]
+
+    language_description_simple = language_description.replace("?", '').replace(".", '').strip().lower()
+    if language_description_simple in ["lat", "latin"]:
+        object.main_language = latin()
+    elif language_description_simple in ["german", "ger"]:
+        object.main_language = german()
+    elif language_description_simple in ["grc"]:
+        object.main_language = ancient_greek()
+    elif language_description_simple in ["fre"]:
+        object.main_language = french()
+    elif language_description_simple in ["heb"]:
+        object.main_language = hebrew()
+    elif language_description_simple in ["spa"]:
+        object.main_language = spanish()
+    elif language_description_simple in ["eng"]:
+        object.main_language = english()
+    elif language_description_simple in ["ita"]:
+        object.main_language = italian()
+    elif language_description_simple in ["latfre", "latfre - not certain"]:
+        object.other_languages.add( latin() )
+        object.other_languages.add( french() )
+    elif language_description_simple in ["latger"]:
+        object.other_languages.add( latin() )
+        object.other_languages.add( german() )
+    elif language_description_simple in ["lateng"]:
+        object.other_languages.add( latin() )
+        object.other_languages.add( english() )
+    elif language_description_simple in ["latmiddle netherlandish", "latdut"]:
+        object.other_languages.add( latin() )
+        object.other_languages.add( dutch() )
+    else:
+        raise Exception(f"Cannot interpret text language: {language_description}")
+    
+    if not object.main_language or not object.main_language.description.lower().startswith(language_description.lower()):
+        object.text_language_description = language_description
+    object.save()
 
 
 def clean_xml_string(string):
@@ -119,13 +188,10 @@ def import_europa_inventa_content_items(csv_path):
             # row['creator_id']
             author = ""
 
-            # Get Language
-            # text_lang
-            
             # Store ID
             # id
 
-            models.ContentItem.objects.update_or_create(
+            item, _ = models.ContentItem.objects.update_or_create(
                 manuscript=manuscript,
                 locus_description=row['locus'],
                 title=row['title'],
@@ -138,6 +204,10 @@ def import_europa_inventa_content_items(csv_path):
                 summary=row['summary'],
                 note=row['note'],
             )
+
+            if row["text_lang"]:
+                interpret_text_language( item, row['text_lang'] )
+
 
 
 def import_bischoff(manuscripts_excel, omeka_xml=None):
@@ -184,7 +254,11 @@ def import_bischoff(manuscripts_excel, omeka_xml=None):
                 repository=repository,
                 identifier=row['Identifier (Shelf Mark)'],
                 defaults=values
-            )                
+            )            
+            
+            if not empty_fields["Language"]:
+                interpret_text_language( manuscript, row['Language'] )
+
             print(manuscript)
 
             if omeka:

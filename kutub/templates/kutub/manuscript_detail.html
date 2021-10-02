@@ -85,7 +85,8 @@
     <div class="row">
       {% grid_attribute manuscript "content_summary" cols=12  blanktext="—" %}
     </div>
-  
+    {% include 'kutub/text_language_detail.html' with object=manuscript %}
+
       {% for item in manuscript.contentitem_set.all %}
       <div class="card">
         <div class="card-body">
@@ -100,6 +101,7 @@
             </div>
             {% grid_attribute item "defective" cols=2 %}
           </div>
+          {% include 'kutub/text_language_detail.html' with object=item %}
           <div class="row">
             {% grid_attribute item "author" cols=6 %}
             {% grid_attribute item "responsibility_statement" cols=6 %}

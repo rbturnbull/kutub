@@ -9,6 +9,7 @@
       <incipit>Iohannes apostolus et euuangelista a deo ihesu christo electus atque dilectus .</incipit>
       <explicit>et deo magisterii doctrina seruetur</explicit>
       <note>author attribution Stegmuller, Vol.I, p.306, no.834.</note>
+      <textLang mainLang="la">Latin</textLang>
     </msItem>
     <msItem n="2">
       <locus>fol 129v b - </locus>
@@ -17,6 +18,7 @@
       <incipit>Mirarinon desino exactionis. . .</incipit>
       <explicit> (130r.a)... dignati complesse. .</explicit>
       <note>author attribution Migne PL, Vol.XXIX, 23&#226;&#128;&#148;6; Stegm&#195;&#188;ller, Vol.I, p.258, no.332</note>
+      <textLang mainLang="la">Latin</textLang>
     </msItem>
   </msContents>
   <additional>

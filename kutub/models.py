@@ -68,6 +68,48 @@ class Language(models.Model):
         return self.generate_tag()
 
 
+class TextLangModel(models.Model):
+    main_language = models.ForeignKey(Language, blank=True, null=True, default=None, on_delete=models.SET_DEFAULT, help_text="The main language used.", related_name='main_language_set')
+    other_languages = models.ManyToManyField(Language, help_text="Other languages used.", related_name='other_language_set')
+    text_language_description = DescriptionField(
+        tag="textLang",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#mslangs",
+        help_text="A description of the language(s).",
+    )
+
+    class Meta:
+        abstract = True
+
+    def get_text_language_description(self):
+        if self.text_language_description:
+            return self.text_language_description
+        else:
+            if self.other_languages.count():
+                other_languages_description = "; ".join([language.description for language in self.other_languages.all()])
+                if self.main_language:
+                    return f"Main Language: {self.main_language.description}. Other Languages: {other_languages_description}"
+                else:
+                    return other_languages_description
+            elif self.main_language:
+                return self.main_language.description
+        return ""
+
+    def text_language_xml(self):
+        if not (self.main_language or self.other_languages.count() or self.text_language_description):
+            return None
+        
+        attributes = dict()
+        if self.main_language:
+            attributes['mainLang'] = self.main_language.tag
+        if self.other_languages.count():
+            attributes['otherLangs'] = " ".join([language.tag for language in self.other_languages.all()])
+
+        element = etree.Element("textLang", **attributes)
+        element.text = self.get_text_language_description()
+
+        return element
+
+
 class XMLModel(models.Model):
     class Meta:
         abstract = True
@@ -207,7 +249,7 @@ class Repository(XMLModel, ReferenceModel, IdentifierModel):
         return self.latitude is not None and self.longitude is not None
 
 
-class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
+class Manuscript(XMLModel, TextLangModel, ReferenceModel, IdentifierModel):
     """
     
     https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html
@@ -393,6 +435,10 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
         if self.content_summary:
             etree.SubElement(contents, "summary").text = self.content_summary
 
+        text_language_element = self.text_language_xml()
+        if text_language_element is not None:
+            contents.append(text_language_element)
+
         for item_index, item in enumerate(self.contentitem_set.all()):
             item_xml = item.xml_element()
             item_xml.set("n", str(item_index+1))
@@ -546,7 +592,7 @@ class Side(models.TextChoices):
     VERSO = 'v'
 
 
-class ContentItem(XMLModel, ReferenceModel, TimeStampedModel, models.Model):
+class ContentItem(XMLModel, TextLangModel, ReferenceModel, TimeStampedModel, models.Model):
     """
     An individual work or item within the intellectual content of a manuscript.
 
@@ -629,8 +675,8 @@ class ContentItem(XMLModel, ReferenceModel, TimeStampedModel, models.Model):
         tag="note", 
         help_text="A note or annotation.",
     )
-    # TODO textLang Language
-    # textLang (text language) describes the languages and writing systems identified within the bibliographic work being described, rather than its description.
+    main_language = models.ForeignKey(Language, blank=True, null=True, default=None, on_delete=models.SET_DEFAULT, help_text="The main language used in this content item.", related_name='main_language_item_set')
+    other_languages = models.ManyToManyField(Language, help_text="Other languages used in this content item.", related_name='other_language_item_set')
 
     class Meta:
         ordering = ["manuscript", "start_folio", "end_folio_side", "end_folio", "end_folio_side", "author", "title"]
@@ -684,6 +730,10 @@ class ContentItem(XMLModel, ReferenceModel, TimeStampedModel, models.Model):
         self.add_sub_element(root, "deco_note")
         self.add_sub_element(root, "filiation")
         self.add_sub_element(root, "note")
+
+        text_language_element = self.text_language_xml()
+        if text_language_element is not None:
+            root.append(text_language_element)
 
         return root
 
