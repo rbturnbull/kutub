@@ -5,21 +5,13 @@
 {% block content %}
 
 {% addtoblock "css" %}
-<style>
-  .xml {
-    background-color: rgb(255, 245, 233);
-    padding: 20px;
-  }
-  summary {
-    outline: none;
-    color: #18bc9c;
-    font-size: 1.5rem;
-    padding-bottom: 10px;
-  }
-  summary span {
-    padding-left: 20px;
-  }
-</style>
+{% include "kutub/detail_css.html" %}
+<link rel="stylesheet" href="https://highlightjs.org/static/demo/styles/stackoverflow-light.css">
+{%endaddtoblock %}
+
+{% addtoblock "js" %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
 {%endaddtoblock %}
 
 
@@ -92,7 +84,7 @@
     <details>
       <summary ><span>TEI</span></summary>
       <a href="./tei" type="button" class="btn btn-primary mb-3"><i class="fas fa-download"></i> Download TEI XML</a>
-      <pre lang="xml" class="xml">{{repository.xml_pretty_print}}</pre>
+      <pre lang="xml" class="xml"><code class="language-xml">{{repository.xml_pretty_print}}</code></pre>
     </details>
   
 </div>
