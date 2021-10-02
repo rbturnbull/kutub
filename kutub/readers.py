@@ -247,8 +247,6 @@ def import_bischoff(manuscripts_excel, omeka_xml=None):
             values['source'] = f"Imported from Excel file '{manuscripts_excel}' (Shelf Mark: {row['Identifier (Shelf Mark)']})."
 
             # 'Subject' is '(keywords separated by '@')'
-            # 'Language' TODO
-            # 'Filename', "As assigned by Digitisation. Filename recorded on paper slip with physical item."
 
             manuscript, _ = models.Manuscript.objects.update_or_create(
                 repository=repository,
@@ -267,5 +265,7 @@ def import_bischoff(manuscripts_excel, omeka_xml=None):
                     omeka_id = items[0].get('itemId')
                     if omeka_id:
                         manuscript.iiif_manifest_url = f"https://repository.monash.edu/items/presentation/{omeka_id}/manifest"
+                        manuscript.url = f"https://repository.monash.edu/items/show/{omeka_id}"
+                        print(manuscript.url)
                         print(manuscript.iiif_manifest_url)
                         manuscript.save()

@@ -263,6 +263,11 @@ class Manuscript(XMLModel, TextLangModel, ReferenceModel, IdentifierModel):
     )
     identifier = models.CharField(max_length=255, help_text="The identifier of the manuscript.")
     alt_identifier = models.CharField(max_length=255, default="", blank=True, help_text="An alternative identifier of the manuscript.")
+    url = DescriptionField(
+        tag="ref",
+        help_text="An external URL for this manuscript.", 
+        verbose_name="URL",
+    )
     repository = models.ForeignKey(
         Repository, 
         default=None, 
@@ -276,7 +281,7 @@ class Manuscript(XMLModel, TextLangModel, ReferenceModel, IdentifierModel):
         docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msco", 
         help_text="A summary of the intellectual content in this manuscript. More details can be added below."
     )
-    iiif_manifest_url = DescriptionField( help_text="A URL to a IIIF manifest with facsimiles of this manuscript." )
+    iiif_manifest_url = DescriptionField( help_text="A URL to a IIIF manifest with facsimiles of this manuscript.", verbose_name="IIIF Manifest URL" )
     # Physical Description
     support_description = DescriptionField(
         tag="supportDesc",
@@ -427,6 +432,9 @@ class Manuscript(XMLModel, TextLangModel, ReferenceModel, IdentifierModel):
         if self.alt_identifier:
             alt = etree.SubElement(msIdentifier, "altIdentifier")
             etree.SubElement(alt, "idno").text = self.alt_identifier
+
+        if self.url:
+            etree.SubElement(root, "ref", target=self.url)
 
         #######################
         ## Contents
@@ -680,6 +688,9 @@ class ContentItem(XMLModel, TextLangModel, ReferenceModel, TimeStampedModel, mod
 
     class Meta:
         ordering = ["manuscript", "start_folio", "end_folio_side", "end_folio", "end_folio_side", "author", "title"]
+
+    def __str__(self):
+        return f"{self.manuscript}: {self.title}"
 
     def get_absolute_url(self):
         return self.manuscript.get_absolute_url()
