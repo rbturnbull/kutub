@@ -7,7 +7,16 @@
 
 {% addtoblock "css" %}
 {% include "kutub/detail_css.html" %}
+<link rel="stylesheet" href="https://highlightjs.org/static/demo/styles/stackoverflow-light.css">
 {%endaddtoblock %}
+
+{% addtoblock "js" %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+{%endaddtoblock %}
+
+
+
 
 <div class="container">
 
@@ -60,7 +69,17 @@
     </div>
     <div class="row">
       {% grid_attribute manuscript "url" url=manuscript.url header="URL" %}
+    </div>     
+    {% if manuscript.tags.count %}
+    <div class="row">
+      <div class=col>
+          <label>Tags</label><br>
+          {% for tag in manuscript.tags.all %}
+              <a href='{{tag.get_absolute_url}}' class="badge badge-primary">{{tag}}</a>
+          {% endfor %}
+      </div>
     </div>      
+    {% endif %}
     <div class="row">
       {% grid_attribute manuscript "note"  %}
     </div>       
@@ -196,7 +215,7 @@
   <details>
     <summary ><span>TEI</span></summary>
     <a href="./tei" type="button" class="btn btn-primary mb-3"><i class="fas fa-download"></i> Download TEI XML</a>
-    <pre lang="xml" class="xml">{{manuscript.xml_pretty_print}}</pre>
+    <pre lang="xml" class="xml"><code class="language-xml">{{manuscript.xml_pretty_print}}</code></pre>
   </details>
 
 </div>

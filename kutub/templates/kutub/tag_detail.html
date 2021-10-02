@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% load sekizai_tags static i18n compress publication_extras kutub cms_tags %}
+
+
+{% block content %}
+
+{% addtoblock "css" %}
+{% include "kutub/detail_css.html" %}
+{%endaddtoblock %}
+
+<div class="container">
+
+  <div class="float-right">
+    {% if tag.prev_in_order %}
+    <a href="{{ tag.prev_in_order.get_absolute_url }}" class="btn btn-outline-primary btn-sm chk-saved"
+      data-toggle="tooltip" data-placement="bottom" title="{{ tag.prev_in_order }}">
+      <i class="fas fa-arrow-left"></i>
+    </a>
+    {% endif %}
+    {% if tag.next_in_order %}
+    <a href="{{ tag.next_in_order.get_absolute_url }}" class="btn btn-outline-primary btn-sm chk-saved"
+      data-toggle="tooltip" data-placement="bottom" title="{{ tag.next_in_order }}">
+      <i class="fas fa-arrow-right"></i>
+    </a>
+    {% endif %}
+  </div>
+
+  <h1>{{ tag }}</h1>
+
+
+  {% if tag.manuscript_set.count %}
+    <ul>
+    {% for manuscript in tag.manuscript_set.all %}
+      <li><a href='{{ manuscript.get_absolute_url }}'>{{manuscript}}</a></li>
+    {% endfor %}
+    </ul>
+  {% else %}
+  <p>No manuscripts found.</p>
+  {% endif %}
+
+</div>
+
+{% endblock %}

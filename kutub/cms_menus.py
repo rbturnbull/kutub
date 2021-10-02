@@ -53,7 +53,13 @@ class KutubMenu(CMSAttachMenu):
             NavigationNode(
                 title="Languages",
                 url=reverse("kutub:language-list"),
-                id=3,
+                id=increment(),
+                visible=True,
+            ),
+            NavigationNode(
+                title="Tags",
+                url=reverse("kutub:tag-list"),
+                id=increment(),
                 visible=True,
             ),
             # NavigationNode(

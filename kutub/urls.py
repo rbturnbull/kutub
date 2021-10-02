@@ -32,6 +32,6 @@ urlpatterns = [
     path("languages/<str:slug>/", views.LanguageDetailView.as_view(), name="language-detail"),
     path("languages/<str:slug>/update/", views.LanguageUpdateView.as_view(), name="language-update"),
 
-    # path("tags/", views.ManuscriptTagListView.as_view(), name="documenttag-list"),
-    # path("tags/<str:slug>/", views.ManuscriptTagDetailView.as_view(), name="documenttag-detail"),
+    path("tags/", views.TagListView.as_view(), name="tag-list"),
+    path("tags/<str:slug>/", views.TagDetailView.as_view(), name="tag-detail"),
 ]

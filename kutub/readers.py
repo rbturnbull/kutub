@@ -90,10 +90,12 @@ def europa_inventa_source_str(ms_id):
 
 def clean_settlement(settlement):
     substitutions = {
-        "Canberra": "Canberra, A.C.T.",
-        "Sydney": "Sydney, N.S.W.",
-        "Box Hill": "Box Hill, Victoria",
-        "Sydney, in the University of Sydney": "Sydney, N.S.W.",
+        "Canberra": "Canberra, ACT",
+        "Canberra, A.C.T.": "Canberra, ACT",
+        "Sydney, N.S.W.": "Sydney, NSW",
+        "Sydney": "Sydney, NSW",
+        "Sydney, in the University of Sydney": "Sydney, NSW",
+        "Box Hill": "Box Hill, VIC",
     }
     if settlement in substitutions:
         settlement = substitutions[settlement]
@@ -163,6 +165,8 @@ def import_europa_inventa_manuscripts(manuscripts_csv_path):
                 provenance=row['provenance'],
                 acquisition=row['acquisition'],
                 source=source,
+                note=row['note'],
+                tags="Europa Inventa",
             )
 
 
@@ -235,7 +239,8 @@ def import_bischoff(manuscripts_excel, omeka_xml=None):
         omeka = None
 
     df = pd.read_excel(manuscripts_excel)
-    print(df.columns)
+    if 'Subject ' in df:
+        df['Subject'] = df['Subject ']
     for index, row in df.iterrows():
         empty_fields = pd.isna(row)
         if not empty_fields['Identifier (Shelf Mark)']:
@@ -262,7 +267,13 @@ def import_bischoff(manuscripts_excel, omeka_xml=None):
                 identifier=row['Identifier (Shelf Mark)'],
                 defaults=values
             )            
-            
+
+            if not empty_fields["Subject"]:
+                # tags = row['Subject'].split("@")
+                tags = []
+                tags.append("Bischoff Collection")
+                manuscript.tags = tags
+
             if not empty_fields["Language"]:
                 interpret_text_language( manuscript, row['Language'] )
 
@@ -277,4 +288,4 @@ def import_bischoff(manuscripts_excel, omeka_xml=None):
                         manuscript.url = f"https://repository.monash.edu/items/show/{omeka_id}"
                         print(manuscript.url)
                         print(manuscript.iiif_manifest_url)
-                        manuscript.save()
+            manuscript.save()

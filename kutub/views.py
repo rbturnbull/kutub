@@ -138,3 +138,22 @@ class LanguageCreateView(RevisionMixin, LanguageView, CreateView):
     form_class = forms.LanguageForm
     template_name = "kutub/form.html"
     extra_context = dict(form_title="Add Language")    
+
+
+######################## 
+##      Tag
+######################## 
+
+class TagView(PermissionRequiredMixin):
+    model = models.Tag
+    permission_required = "kutub.view_documenttag"
+
+
+class TagListView(TagView, ListView):
+    paginate_by = PAGINATION
+    context_object_name = "tag"
+    extra_context = dict(title="Tags")
+
+
+class TagDetailView(TagView, DetailView):
+    context_object_name = "tag"    

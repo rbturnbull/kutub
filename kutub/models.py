@@ -12,6 +12,7 @@ from django_extensions.db.models import TimeStampedModel
 from next_prev import next_in_order, prev_in_order
 from publications.models import ReferenceModel
 from partial_date.fields import PartialDateField
+import tagulous.models
 
 from .fields import DescriptionField
 
@@ -190,6 +191,12 @@ class XMLModel(FieldAttrModel, models.Model):
             etree.SubElement(parent, tag).text = value
 
 
+class Tag(NextPrevMixin, tagulous.models.TagTreeModel):
+    class TagMeta:
+        space_delimiter = False
+        get_absolute_url = lambda tag: reverse('kutub:tag-detail', kwargs={'slug': tag.slug})
+
+
 class IdentifierModel(NextPrevMixin, TimeStampedModel, models.Model):
     identifier = models.CharField(max_length=255, help_text="The identifier of this object.")
     slug = AutoSlugField(populate_from='identifier', unique=True)
@@ -293,6 +300,7 @@ class Manuscript(XMLModel, TextLangModel, ReferenceModel, IdentifierModel):
         help_text="An external URL for this manuscript.", 
         verbose_name="URL",
     )
+    tags = tagulous.models.TagField( to=Tag, blank=True )
     repository = models.ForeignKey(
         Repository, 
         default=None, 
@@ -709,7 +717,7 @@ class ContentItem(XMLModel, TextLangModel, ReferenceModel, TimeStampedModel, mod
         help_text="A note or annotation.",
     )
     main_language = models.ForeignKey(Language, blank=True, null=True, default=None, on_delete=models.SET_DEFAULT, help_text="The main language used in this content item.", related_name='main_language_item_set')
-    other_languages = models.ManyToManyField(Language, help_text="Other languages used in this content item.", related_name='other_language_item_set')
+    other_languages = models.ManyToManyField(Language, blank=True, help_text="Other languages used in this content item.", related_name='other_language_item_set')
 
     class Meta:
         ordering = ["manuscript", "start_folio", "end_folio_side", "end_folio", "end_folio_side", "author", "title"]

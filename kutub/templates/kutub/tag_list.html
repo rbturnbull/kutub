@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% load static i18n compress kutub %}
+
+{% block content %}
+
+<div class="container">
+
+  <h1>Tags</h1>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Tag</th>
+        <th scope="col">Manuscripts</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tag in page_obj %}
+      <tr>
+        <th scope="row"><a href="{{ tag.get_absolute_url }}">{{ tag }}</a></th>
+        <td>{{ tag.manuscript_set.count }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% include 'kutub/pagination.html' %}
+</div>
+
+{% endblock %}
