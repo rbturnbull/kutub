@@ -22,7 +22,40 @@ def clean_xml_string(string):
     return re.sub(u'[^\u0020-\uD7FF\u0009\u000A\u000D\uE000-\uFFFD\U00010000-\U0010FFFF]+', '', string)
 
 
-class Language(models.Model):
+class NextPrevMixin(models.Model):
+    class Meta:
+        abstract = True
+
+    def next_in_order(self, **kwargs):
+        return next_in_order( self )
+
+    def prev_in_order(self, **kwargs):
+        return prev_in_order( self )
+
+
+class FieldAttrModel(models.Model):
+    class Meta:
+        abstract = True
+
+    def field_attr(self, field_name, attribute):
+        field = self._meta.get_field(field_name)
+        if hasattr(field, attribute):
+            return getattr(field, attribute)
+
+    def help_text(self, field_name):
+        return self.field_attr( field_name, "help_text")
+
+    def field_help(self, field_name):
+        return self.field_attr( field_name, "help_text")
+
+    def field_docs(self, field_name):
+        return self.field_attr( field_name, "docs")
+
+    def field_tag(self, field_name):
+        return self.field_attr( field_name, "tag")
+
+
+class Language(NextPrevMixin, FieldAttrModel, models.Model):
     tag = DescriptionField(
         docs="https://www.w3.org/International/articles/language-tags/index.en",
         help_text="The tag for this language. This is generated from the other fields and should not be edited manually."
@@ -63,12 +96,29 @@ class Language(models.Model):
         self.tag = self.generate_tag()
         super().save(*args, **kwargs)
 
+    def get_absolute_url(self):
+        return reverse_lazy(f"{self._meta.app_label}:{self.__class__.__name__.lower()}-detail", kwargs={"slug": self.tag})
+
+    def get_absolute_update_url(self):
+        return reverse_lazy(f"{self._meta.app_label}:{self.__class__.__name__.lower()}-update", kwargs={"slug": self.tag})
+
+    def get_admin_url(self):
+        return reverse(f'admin:{self._meta.app_label}_{self._meta.model_name}_change', args=(self.pk,))
+
     def __str__(self):
         if self.description:
             return self.description
         if self.tag:
             return self.tag
         return self.generate_tag()
+
+    def manuscripts(self):
+        ids = set()
+        ids.update( Manuscript.objects.filter(main_language=self).values_list('id', flat=True) )
+        ids.update( Manuscript.objects.filter(other_languages=self).values_list('id', flat=True) )
+        ids.update( ContentItem.objects.filter(main_language=self).values_list('manuscript__id', flat=True) )
+        ids.update( ContentItem.objects.filter(other_languages=self).values_list('manuscript__id', flat=True) )
+        return Manuscript.objects.filter(id__in=ids)
 
 
 class TextLangModel(models.Model):
@@ -113,7 +163,7 @@ class TextLangModel(models.Model):
         return element
 
 
-class XMLModel(models.Model):
+class XMLModel(FieldAttrModel, models.Model):
     class Meta:
         abstract = True
 
@@ -138,34 +188,6 @@ class XMLModel(models.Model):
                     tag = field.tag
 
             etree.SubElement(parent, tag).text = value
-
-    def field_attr(self, field_name, attribute):
-        field = self._meta.get_field(field_name)
-        if hasattr(field, attribute):
-            return getattr(field, attribute)
-
-    def help_text(self, field_name):
-        return self.field_attr( field_name, "help_text")
-
-    def field_help(self, field_name):
-        return self.field_attr( field_name, "help_text")
-
-    def field_docs(self, field_name):
-        return self.field_attr( field_name, "docs")
-
-    def field_tag(self, field_name):
-        return self.field_attr( field_name, "tag")
-
-
-class NextPrevMixin(models.Model):
-    class Meta:
-        abstract = True
-
-    def next_in_order(self, **kwargs):
-        return next_in_order( self )
-
-    def prev_in_order(self, **kwargs):
-        return prev_in_order( self )
 
 
 class IdentifierModel(NextPrevMixin, TimeStampedModel, models.Model):

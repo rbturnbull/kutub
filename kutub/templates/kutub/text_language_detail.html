@@ -14,8 +14,8 @@
             </span>    
             <br>
             {% for language in object.other_languages.all %}
-            {{ language }}
+            <a href='{{ language.get_absolute_url }}'>{{ language }}</a>
             {% endfor %}
           </div>
     {% endif %}
-  </div>
+</div>

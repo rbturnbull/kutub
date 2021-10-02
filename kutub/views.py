@@ -105,3 +105,36 @@ class ManuscriptCreateView(RevisionMixin, ManuscriptView, CreateView):
     form_class = forms.ManuscriptForm
     template_name = "kutub/manuscript_form.html"
     extra_context = dict(form_title="Add Manuscript")
+
+
+######################## 
+##      Language
+######################## 
+
+class LanguageView(PermissionRequiredMixin):
+    model = models.Language
+    permission_required = "kutub.view_language"
+    slug_field = 'tag'
+
+
+class LanguageListView(LanguageView, ListView):
+    paginate_by = PAGINATION
+    extra_context = dict(title="Language List")
+
+
+class LanguageDetailView(TitleFromObjectMixin, LanguageView, DetailView):
+    pass
+
+
+class LanguageUpdateView(TitleFromObjectMixin, RevisionMixin, LanguageView, UpdateView):
+    permission_required = "kutub.update_language"
+    form_class = forms.LanguageForm
+    template_name = "kutub/form.html"
+    extra_context = dict(form_title="Update Language")
+
+
+class LanguageCreateView(RevisionMixin, LanguageView, CreateView):
+    permission_required = "kutub.add_language"
+    form_class = forms.LanguageForm
+    template_name = "kutub/form.html"
+    extra_context = dict(form_title="Add Language")    

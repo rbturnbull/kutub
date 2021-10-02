@@ -76,6 +76,9 @@ def attribute_row(object, field_name, suffix="", header=""):
 def grid_attribute(object, field_name, suffix="", header="", cols=None, url="", blanktext=""):
     header = header or object.field_attr(field_name, "verbose_name").title()
     value = getattr(object, field_name) or blanktext
+    if not url and hasattr(value, "get_absolute_url"):
+        url = value.get_absolute_url()
+
     return {
         'object': object,
         'field_name': field_name,

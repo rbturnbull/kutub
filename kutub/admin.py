@@ -26,6 +26,11 @@ class RepositoryAdmin(VersionAdmin):
     # inlines = (DocumentInline,)
 
 
+@admin.register(models.Language)
+class LanguageAdmin(VersionAdmin):
+    search_fields = ['__all__']
+
+
 @admin.register(models.Manuscript)
 class ManuscriptAdmin(VersionAdmin):
     search_fields = ['__all__']

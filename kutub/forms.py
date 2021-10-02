@@ -70,6 +70,24 @@ class RepositoryForm(forms.ModelForm):
             submit_buttons(),
         )
 
+class LanguageForm(forms.ModelForm):
+    class Meta:
+        fields = "__all__"
+        model = models.Language
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            "identifier",
+            "url",
+            Row(Column("description"), css_class='form-row'),
+            Row(Column("language_subtag"), Column("extlang"), css_class='form-row'),
+            Row(Column("script"), Column("region"), css_class='form-row'),
+            submit_buttons(),
+        )
+
+
 class ContentItemForm(SuperModelForm):
     class Meta:
         model = models.ContentItem

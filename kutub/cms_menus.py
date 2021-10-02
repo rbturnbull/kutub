@@ -50,12 +50,12 @@ class KutubMenu(CMSAttachMenu):
             #     id=2,
             #     visible=True,
             # ),
-            # NavigationNode(
-            #     title="Languages",
-            #     url=reverse("kutub:language-list"),
-            #     id=3,
-            #     visible=True,
-            # ),
+            NavigationNode(
+                title="Languages",
+                url=reverse("kutub:language-list"),
+                id=3,
+                visible=True,
+            ),
             # NavigationNode(
             #     title="Materials",
             #     url=reverse("kutub:material-list"),

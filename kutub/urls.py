@@ -27,10 +27,11 @@ urlpatterns = [
     path("mss/<str:slug>/iiif/", views.ManuscriptIIIFManifestView.as_view(), name="manuscript-iiif"),
     path("mss/<str:slug>/update/", views.ManuscriptUpdateView.as_view(), name="manuscript-update"),
 
+    path("languages/", views.LanguageListView.as_view(), name="language-list"),
+    path("languages/create/", views.LanguageCreateView.as_view(), name="language-create"),
+    path("languages/<str:slug>/", views.LanguageDetailView.as_view(), name="language-detail"),
+    path("languages/<str:slug>/update/", views.LanguageUpdateView.as_view(), name="language-update"),
+
     # path("tags/", views.ManuscriptTagListView.as_view(), name="documenttag-list"),
     # path("tags/<str:slug>/", views.ManuscriptTagDetailView.as_view(), name="documenttag-detail"),
-
-    # path("info/", views.InfoCategoryListView.as_view(), name="infocategory-list"),
-    # path("info/<str:slug>/", views.InfoCategoryDetailView.as_view(), name="infocategory-detail"),
-
 ]
