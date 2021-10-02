@@ -52,6 +52,9 @@ class Language(models.Model):
         help_text="A description of this language.",
     )
 
+    class Meta:
+        ordering = ('description', 'language_subtag','extlang','script','region',)
+
     def generate_tag(self):
         components = [component for component in [self.language_subtag, self.extlang, self.script, self.region] if component]
         return "-".join(components)

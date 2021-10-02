@@ -96,6 +96,8 @@
           <div class="row">
             {% grid_attribute item "title" cols=6 %}
             {% grid_attribute item "summary" cols=6 %}
+            {% grid_attribute item "author" cols=6 %}
+            {% grid_attribute item "responsibility_statement" cols=6 %}
           </div>
           <div class="row">            
             {% grid_attribute item "locus_description" cols=4 %}
@@ -105,10 +107,6 @@
             {% grid_attribute item "defective" cols=2 %}
           </div>
           {% include 'kutub/text_language_detail.html' with object=item %}
-          <div class="row">
-            {% grid_attribute item "author" cols=6 %}
-            {% grid_attribute item "responsibility_statement" cols=6 %}
-          </div>
           <div class="row">
             {% grid_attribute item "rubric" cols=6 %}
             {% grid_attribute item "incipit" cols=6 %}

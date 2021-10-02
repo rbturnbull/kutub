@@ -166,7 +166,14 @@ def import_europa_inventa_manuscripts(manuscripts_csv_path):
             )
 
 
-def import_europa_inventa_content_items(csv_path):
+def import_europa_inventa_content_items(csv_path, creator_csv_path):
+    creator = {}
+    with open(creator_csv_path, newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            creator[row['id']] = row['name']
+
+
     with open(csv_path, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
@@ -185,8 +192,9 @@ def import_europa_inventa_content_items(csv_path):
                 continue
 
             # Get Creator
-            # row['creator_id']
             author = ""
+            if row['creator_id']:
+                author = creator[row['creator_id']]
 
             # Store ID
             # id

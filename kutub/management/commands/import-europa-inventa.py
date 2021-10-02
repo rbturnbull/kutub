@@ -7,6 +7,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('--mss', type=str, default="", help="A CSV dump of manuscripts in the Europa Inventa database.")
         parser.add_argument('--items', type=str, default="", help="A CSV dump of manuscript items in the Europa Inventa database.")
+        parser.add_argument('--creators', type=str, default="", help="A CSV dump of creators in the Europa Inventa database.")
         parser.add_argument('--flush', action='store_true', default=False, help="Deletes the database before performing import.")
 
     def handle(self, *args, **options):
@@ -18,5 +19,5 @@ class Command(BaseCommand):
         if options['mss']:
             readers.import_europa_inventa_manuscripts(options['mss'])
 
-        if options['items']:
-            readers.import_europa_inventa_content_items(options['items'])
+        if options['items'] and options['creators']:
+            readers.import_europa_inventa_content_items(options['items'], options['creators'])
