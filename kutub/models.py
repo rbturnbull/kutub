@@ -123,7 +123,7 @@ class Language(NextPrevMixin, FieldAttrModel, models.Model):
 
 class TextLangModel(models.Model):
     main_language = models.ForeignKey(Language, blank=True, null=True, default=None, on_delete=models.SET_DEFAULT, help_text="The main language used.", related_name='main_language_set')
-    other_languages = models.ManyToManyField(Language, help_text="Other languages used.", related_name='other_language_set')
+    other_languages = models.ManyToManyField(Language, blank=True, help_text="Other languages used.", related_name='other_language_set')
     text_language_description = DescriptionField(
         tag="textLang",
         docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#mslangs",
@@ -606,7 +606,7 @@ class Manuscript(XMLModel, TextLangModel, ReferenceModel, IdentifierModel):
             etree.SubElement(source, "p").text = self.source
 
         if self.note:
-            etree.SubElement(root, "note").text = self.note
+            etree.SubElement(root, "p").text = self.note
 
         return root
 
