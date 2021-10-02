@@ -10,7 +10,7 @@ pytest:
     - pip install poetry
     - poetry install
   script:
-    - poetry run coverage run -m pytest
+    - poetry run coverage run ./runtests.py
     - poetry run coverage html
     - poetry run coverage report
   artifacts:

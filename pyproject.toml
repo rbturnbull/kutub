@@ -18,6 +18,7 @@ django-pandas = "^0.6.4"
 django-partial-date = {git = "https://github.com/rbturnbull/django_partial_date.git"}
 django-watson = "^1.5.5"
 django-crispy-forms = "^1.9.2"
+openpyxl = "^3.0.9"
 
 [tool.poetry.dev-dependencies]
 coverage = "^5.5"

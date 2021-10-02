@@ -1,5 +1,8 @@
 import csv
 import re
+import pandas as pd
+from lxml import etree
+
 
 from . import models
 
@@ -137,3 +140,58 @@ def import_europa_inventa_content_items(csv_path):
             )
 
 
+def import_bischoff(manuscripts_excel, omeka_xml=None):
+    repository, _ = models.Repository.objects.update_or_create(
+        identifier="Monash University, Bischoff Collection",
+        defaults=dict(
+            url='https://www.monash.edu/library/bischoff',
+            settlement="Melbourne",
+            latitude=-37.912890798928274,
+            longitude=145.13442309216325,
+        )
+    )
+    if omeka_xml:
+        omeka = etree.parse(omeka_xml).getroot()
+    else:
+        omeka = None
+
+    df = pd.read_excel(manuscripts_excel)
+    print(df.columns)
+    for index, row in df.iterrows():
+        empty_fields = pd.isna(row)
+        if not empty_fields['Identifier (Shelf Mark)']:
+
+            values = {}
+
+            def add_value(field, column):
+                if not empty_fields[column]:
+                    values[field] = row[column]
+            
+            add_value('alt_identifier', 'Identifier (eg. MS number)')
+            add_value('heading', 'Title')
+            add_value('extent_description', 'Extent')
+            add_value('origin_date_description', 'Date')
+            add_value('origin_place', 'Creator')
+            add_value('source', 'Creator')
+            add_value('note', 'Description\n')
+            values['source'] = f"Imported from Excel file '{manuscripts_excel}' (Shelf Mark: {row['Identifier (Shelf Mark)']})."
+
+            # 'Subject' is '(keywords separated by '@')'
+            # 'Language' TODO
+            # 'Filename', "As assigned by Digitisation. Filename recorded on paper slip with physical item."
+
+            manuscript, _ = models.Manuscript.objects.update_or_create(
+                repository=repository,
+                identifier=row['Identifier (Shelf Mark)'],
+                defaults=values
+            )                
+            print(manuscript)
+
+            if omeka:
+                items = omeka.xpath(f"./o:item[.//*[contains(text(), '{manuscript.identifier}')]]", namespaces={'o':'http://omeka.org/schemas/omeka-xml/v5'})
+                if len(items) == 1:
+                    omeka_id = items[0].get('itemId')
+                    if omeka_id:
+                        manuscript.iiif_manifest_url = f"https://repository.monash.edu/items/presentation/{omeka_id}/manifest"
+                        print(manuscript.iiif_manifest_url)
+                        manuscript.save()

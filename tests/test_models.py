@@ -2,6 +2,24 @@ from django.test import TestCase
 
 from kutub import models
 
+class LanguageTests(TestCase):
+    def test_english(self):
+        language = models.Language(language_subtag="en", description="English")
+        self.assertEqual( language.generate_tag(), "en" )
+        self.assertEqual( str(language), "English" )
+        language.save()
+        self.assertEqual( language.tag, "en" )
+
+    def test_south_american_spanish(self):
+        language = models.Language(language_subtag="es", region="005")
+        self.assertEqual( language.generate_tag(), "es-005" )
+        self.assertEqual( str(language), "es-005" )
+
+    def test_hk(self):
+        language = models.Language(language_subtag="zh", region="HK", script='Hant', description="Traditional Chinese as used in Hong Kong")
+        self.assertEqual( language.generate_tag(), "zh-Hant-HK" )
+
+
 class RepositoryTests(TestCase):
     def test_tei(self):
         repository = models.Repository.objects.create(

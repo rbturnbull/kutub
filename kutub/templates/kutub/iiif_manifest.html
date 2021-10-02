@@ -1,0 +1,23 @@
+<html>
+    <div id="mirador" style="width: 600px; height: 600px;"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/mirador@3.2.0/dist/mirador.min.js" integrity="sha256-e11UQD1U7ifc8OK9X0rVMshTXSKl7MafRxi3PTwXDHs=" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        var mirador = Mirador.viewer({
+            "id": "mirador",
+            "manifests": {
+                "{{manuscript.iiif_manifest_url}}": {
+                "provider": "Django Inventory"
+                }
+            },
+            "windows": [
+                {
+                "loadedManifest": "{{manuscript.iiif_manifest_url}}",
+                "canvasIndex": 1,
+                "thumbnailNavigationPosition": 'far-bottom'
+                }
+            ]
+        });
+    </script>
+</html>

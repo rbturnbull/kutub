@@ -1,9 +1,10 @@
 import re
+from django.db.models.fields import CharField
 from lxml import etree
 
 from django.db import models
 from django.urls import reverse_lazy, reverse
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
 
 from django_extensions.db.fields import AutoSlugField
 from django_extensions.db.models import TimeStampedModel
@@ -19,6 +20,52 @@ from .fields import DescriptionField
 
 def clean_xml_string(string):
     return re.sub(u'[^\u0020-\uD7FF\u0009\u000A\u000D\uE000-\uFFFD\U00010000-\U0010FFFF]+', '', string)
+
+
+class Language(models.Model):
+    tag = DescriptionField(
+        docs="https://www.w3.org/International/articles/language-tags/index.en",
+        help_text="The tag for this language. This is generated from the other fields and should not be edited manually."
+    )
+    language_subtag = DescriptionField(
+        help_text="The IANA-registered code for the language. Written in lower case.",
+        docs='https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry',
+        validators=[RegexValidator(r"^[a-z]+$", message='The language code must be written in lower case.', code='language_subtag')],
+        blank=False,
+    )
+    extlang = DescriptionField(
+        help_text="The extended language subtag.",
+        docs='https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry',
+        validators=[RegexValidator(r"^[a-z]*$", message='The extended language subtag must be written in lower case.', code='invalid_extlang')]
+    )
+    script = DescriptionField(
+        help_text="The script subtag. Omit unless making a necessary distinction.",
+        docs='https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry',
+        validators=[RegexValidator(r"[A-Z][a-z]{3}$", message='The script is four characters long with the first character uppercase.', code='invalid_script')]
+    )
+    region = DescriptionField(
+        help_text="The two-letter ISO 3166 country code or the 3-digit UN M.49 region code.",
+        docs='https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry',
+        validators=[RegexValidator(r"^[A-Z]{2}|\d{3}$", message='Not a valid two-letter ISO 3166 country code or 3-digit UN M.49 region code.', code='invalid_region')]
+    )
+    description = DescriptionField(
+        help_text="A description of this language.",
+    )
+
+    def generate_tag(self):
+        components = [component for component in [self.language_subtag, self.extlang, self.script, self.region] if component]
+        return "-".join(components)
+    
+    def save(self, *args, **kwargs):
+        self.tag = self.generate_tag()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        if self.description:
+            return self.description
+        if self.tag:
+            return self.tag
+        return self.generate_tag()
 
 
 class XMLModel(models.Model):
@@ -187,6 +234,7 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
         docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msco", 
         help_text="A summary of the intellectual content in this manuscript. More details can be added below."
     )
+    iiif_manifest_url = DescriptionField( help_text="A URL to a IIIF manifest with facsimiles of this manuscript." )
     # Physical Description
     support_description = DescriptionField(
         tag="supportDesc",
@@ -303,6 +351,11 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
         tag="source",
         docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msrh",
         help_text="Describes the original source for the information contained with this manuscript description."
+    )
+    note = DescriptionField(
+        tag="note",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html",
+        help_text="A general description of the manuscript if the content cannot be easily placed in the other fields."
     )
 
     def __str__(self):
@@ -472,6 +525,9 @@ class Manuscript(XMLModel, ReferenceModel, IdentifierModel):
             record_history = etree.SubElement(admin, "recordHist")
             source = etree.SubElement(record_history, "source")
             etree.SubElement(source, "p").text = self.source
+
+        if self.note:
+            etree.SubElement(root, "note").text = self.note
 
         return root
 
