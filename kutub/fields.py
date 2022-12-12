@@ -36,3 +36,21 @@ class DescriptionField(models.TextField):
 
     def reference_url(self):
         return f"https://tei-c.org/release/doc/tei-p5-doc/en/html/ref-{self.tag}.html"
+
+
+
+
+class CharField(models.CharField):
+    def __init__(self, docs="", default="", blank=True, *args, **kwargs):
+        """
+        A CharField with docs
+        """
+        self.docs = docs
+        kwargs['default'] = default
+        kwargs['blank'] = blank
+        super().__init__(*args, **kwargs)
+
+    def formfield(self, **kwargs):
+        formfield = super().formfield(**kwargs)
+        formfield.docs = self.docs
+        return formfield

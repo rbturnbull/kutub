@@ -129,14 +129,14 @@ class LanguageDetailView(TitleFromObjectMixin, LanguageView, DetailView):
 class LanguageUpdateView(TitleFromObjectMixin, RevisionMixin, LanguageView, UpdateView):
     permission_required = "kutub.update_language"
     form_class = forms.LanguageForm
-    template_name = "kutub/form.html"
+    template_name = "kutub/language_form.html"
     extra_context = dict(form_title="Update Language")
 
 
 class LanguageCreateView(RevisionMixin, LanguageView, CreateView):
     permission_required = "kutub.add_language"
     form_class = forms.LanguageForm
-    template_name = "kutub/form.html"
+    template_name = "kutub/language_form.html"
     extra_context = dict(form_title="Add Language")    
 
 

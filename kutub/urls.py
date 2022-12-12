@@ -1,17 +1,8 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 app_name = "kutub"
 urlpatterns = [
-    # path("languages/", views.LanguageListView.as_view(), name="language-list"),
-    # path("languages/<str:slug>/", views.LanguageDetailView.as_view(), name="language-detail"),
-
-    # path("scripts/", views.ScriptListView.as_view(), name="script-list"),
-    # path("scripts/<str:slug>/", views.ScriptDetailView.as_view(), name="script-detail"),
-
-    # path("materials/", views.MaterialListView.as_view(), name="material-list"),
-    # path("materials/<str:slug>/", views.MaterialDetailView.as_view(), name="material-detail"),
-
     path("repositories/", views.RepositoryListView.as_view(), name="repository-list"),
     path("repositories/map/", views.AllRepositoriesMapView.as_view(), name="all-repositories-map"),
     path("repositories/create/", views.RepositoryCreateView.as_view(), name="repository-create"),
@@ -34,4 +25,5 @@ urlpatterns = [
 
     path("tags/", views.TagListView.as_view(), name="tag-list"),
     path("tags/<str:slug>/", views.TagDetailView.as_view(), name="tag-detail"),
+
 ]

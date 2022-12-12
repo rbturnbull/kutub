@@ -8,12 +8,14 @@
 {%endaddtoblock %}
 
 {{ form.media.css }}
+
 <div class="container mt-5 form-container" id='welcome_heading'>
   <h1>{{ form_title }}</h1>
   <div class="container">
     <form action="" data-validate="" method="post">
       {% include 'kutub/form_preamble.html' %}
 
+      
       <details open class="mt-5">
         <summary ><span>MS. Details</span></summary>
         <div class="form-row">
@@ -144,4 +146,8 @@
 <!-- end kutub/form.html js -->
 {% endaddtoblock %}
 
+
+{% addtoblock "css" %}
+
+{% endaddtoblock %}
 {% endblock %}

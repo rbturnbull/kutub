@@ -3,6 +3,7 @@
 
 {% block content %}
     {{ form.media.css }}
+
     <div class="container mt-5 form-container" id='welcome_heading'>
         <h1>{{ form_title }}</h1>
         <div class="container">
@@ -12,6 +13,7 @@
     </div>
 
     {% addtoblock "js" %}
+    
         <!-- inventory/form.html js -->
         {{ form.media.js }}
     {% endaddtoblock js" %}

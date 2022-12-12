@@ -7,6 +7,11 @@ from django.forms.models import inlineformset_factory
 from django_superform.forms import SuperModelFormMixin
 from django_superform import InlineFormSetField
 
+from language_tags import data as language_data
+registry = language_data.get('registry')
+
+from django_select2 import forms as s2forms
+
 from . import models
 
 
@@ -70,17 +75,54 @@ class RepositoryForm(forms.ModelForm):
             submit_buttons(),
         )
 
+language_subtag_choices = sorted( 
+    [(language['Subtag'],language['Description'][0]) for language in filter(lambda x: x['Type'] == "language", registry) ],
+    key=lambda x: x[1],
+)
+
+
+
+class ChoiceWidget(s2forms.Select2Widget):
+    def build_attrs(self, base_attrs, extra_attrs=None):
+        base_attrs = super().build_attrs(base_attrs, extra_attrs)
+        base_attrs.update(
+            {
+                "data-minimum-input-length": 0, 
+                "data-placeholder": self.empty_label,
+                # "data-theme": "bootstrap4",
+            }
+        )
+        return base_attrs
+
+    @property
+    def media(self):
+        media = super().media
+        
+        js = [x if x != "django_select2/django_select2.js" else "kutub/js/django_select2.js" for x in list(media._js)]
+        css = dict(media._css)
+        css['screen'] += ["https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css"]
+        return forms.Media(
+            css=css,
+            js=js,
+        )
+
+
 class LanguageForm(forms.ModelForm):
     class Meta:
         fields = "__all__"
         model = models.Language
+        widgets = {
+            "language_subtag": ChoiceWidget,
+            "extlang": ChoiceWidget,
+            "script": ChoiceWidget,
+            "region": ChoiceWidget,
+        }
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            "identifier",
-            "url",
             Row(Column("description"), css_class='form-row'),
             Row(Column("language_subtag"), Column("extlang"), css_class='form-row'),
             Row(Column("script"), Column("region"), css_class='form-row'),
@@ -88,10 +130,30 @@ class LanguageForm(forms.ModelForm):
         )
 
 
+class LanguageWidget(s2forms.ModelSelect2MultipleWidget):
+    search_fields = [
+        "description__icontains",
+    ]
+
+    def build_attrs(self, base_attrs, extra_attrs=None):
+        base_attrs = super().build_attrs(base_attrs, extra_attrs)
+        base_attrs.update(
+            {
+                "data-minimum-input-length": 0, 
+                "data-placeholder": self.empty_label,
+                "theme": "bootstrap4",
+            }
+        )
+        return base_attrs
+
+
 class ContentItemForm(SuperModelForm):
     class Meta:
         model = models.ContentItem
         fields = "__all__"
+        widgets = {
+            "other_languages": LanguageWidget,
+        }
 
 
 ContentItemFormSet = inlineformset_factory(
@@ -109,4 +171,6 @@ class ManuscriptForm(SuperModelForm):
     class Meta:
         fields = "__all__"
         model = models.Manuscript
-
+        widgets = {
+            "other_languages": LanguageWidget,
+        }

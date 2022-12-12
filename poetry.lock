@@ -38,6 +38,17 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-appconf"
+version = "1.0.5"
+description = "A helper class for handling configuration defaults of packaged apps gracefully."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+django = "*"
+
+[[package]]
 name = "django-classy-tags"
 version = "2.0.0"
 description = "Class based template tags for Django"
@@ -181,6 +192,21 @@ django = ">=2.2"
 django-classy-tags = ">=1"
 
 [[package]]
+name = "django-select2"
+version = "7.7.3"
+description = "Select2 option fields for Django"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+django = ">=2.2"
+django-appconf = ">=0.6.0"
+
+[package.extras]
+test = ["pytest", "pytest-cov", "pytest-django", "selenium"]
+
+[[package]]
 name = "django-superform"
 version = "0.4.0.dev1"
 description = "So much easier handling of formsets."
@@ -244,6 +270,14 @@ description = "An implementation of lxml.xmlfile for the standard library"
 category = "main"
 optional = false
 python-versions = ">=3.6"
+
+[[package]]
+name = "language-tags"
+version = "1.1.0"
+description = "This project is a Python version of the language-tags Javascript project."
+category = "main"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "lxml"
@@ -340,7 +374,7 @@ python-versions = ">=3.5"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "d0a21ce5e35521fb75ae55e68df0d14dcd88b07cbc1fb42a850853d49a57b8e7"
+content-hash = "e08f6018ece2f58b2c3c599b824db4e468f72dd41ae41258a23dd6df51b36aef"
 
 [metadata.files]
 asgiref = [
@@ -405,6 +439,10 @@ django = [
     {file = "Django-3.2.7-py3-none-any.whl", hash = "sha256:e93c93565005b37ddebf2396b4dc4b6913c1838baa82efdfb79acedd5816c240"},
     {file = "Django-3.2.7.tar.gz", hash = "sha256:95b318319d6997bac3595517101ad9cc83fe5672ac498ba48d1a410f47afecd2"},
 ]
+django-appconf = [
+    {file = "django-appconf-1.0.5.tar.gz", hash = "sha256:be3db0be6c81fa84742000b89a81c016d70ae66a7ccb620cdef592b1f1a6aaa4"},
+    {file = "django_appconf-1.0.5-py3-none-any.whl", hash = "sha256:ae9f864ee1958c815a965ed63b3fba4874eec13de10236ba063a788f9a17389d"},
+]
 django-classy-tags = [
     {file = "django-classy-tags-2.0.0.tar.gz", hash = "sha256:d59d98bdf96a764dcf7a2929a86439d023b283a9152492811c7e44fc47555bc9"},
     {file = "django_classy_tags-2.0.0-py3-none-any.whl", hash = "sha256:25eb4f95afee396148683bfb4811b83b3f5729218d73ad0a3399271a6f9fcc49"},
@@ -441,6 +479,10 @@ django-sekizai = [
     {file = "django-sekizai-2.0.0.tar.gz", hash = "sha256:e829f09b0d6bf01ee5cde05de1fb3faf2fbc5df66dc4dc280fbaac224ca4336f"},
     {file = "django_sekizai-2.0.0-py3-none-any.whl", hash = "sha256:5c5e16845d37ce822fc655ce79ec02715191b3d03330b550997bcb842cf24fdf"},
 ]
+django-select2 = [
+    {file = "django-select2-7.7.3.tar.gz", hash = "sha256:063d29df5598ec6549a4d49cc4beb85d585987a4e470224592034aff2d4f0a3f"},
+    {file = "django_select2-7.7.3-py2.py3-none-any.whl", hash = "sha256:7bf5b35595624a3318f46d69f639e38dafb123fa4a6f82d63a6a1ac6d532317d"},
+]
 django-superform = []
 django-tagulous = [
     {file = "django-tagulous-1.3.0.tar.gz", hash = "sha256:8e7967f196358a0c7985f65ec5672afab350e9224062a769a74ff456a01d94cd"},
@@ -460,6 +502,10 @@ djangocms-admin-style = [
 et-xmlfile = [
     {file = "et_xmlfile-1.1.0-py3-none-any.whl", hash = "sha256:a2ba85d1d6a74ef63837eed693bcb89c3f752169b0e3e7ae5b16ca5e1b3deada"},
     {file = "et_xmlfile-1.1.0.tar.gz", hash = "sha256:8eb9e2bc2f8c97e37a2dc85a09ecdcdec9d8a396530a6d5a33b30b9a92da0c5c"},
+]
+language-tags = [
+    {file = "language_tags-1.1.0-py2.py3-none-any.whl", hash = "sha256:2b6493f0733ab2fb70db284dd8231ba86b2ada5afa6974a7f89af52bab2a9658"},
+    {file = "language_tags-1.1.0.tar.gz", hash = "sha256:0c9a828ee63b5cc94876697f4d58449b0e4deaddab334f983b2a26d6979e8d4f"},
 ]
 lxml = [
     {file = "lxml-4.6.3-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:df7c53783a46febb0e70f6b05df2ba104610f2fb0d27023409734a3ecbb78fb2"},

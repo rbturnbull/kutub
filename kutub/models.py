@@ -1,5 +1,4 @@
 import re
-from django.db.models.fields import CharField
 from lxml import etree
 
 from django.db import models
@@ -9,12 +8,14 @@ from django.core.validators import MaxValueValidator, MinValueValidator, RegexVa
 from django_extensions.db.fields import AutoSlugField
 from django_extensions.db.models import TimeStampedModel
 
+from language_tags import data as language_data
+
 from next_prev import next_in_order, prev_in_order
 from publications.models import ReferenceModel
 from partial_date.fields import PartialDateField
 import tagulous.models
 
-from .fields import DescriptionField
+from .fields import DescriptionField, CharField
 
 # def DescriptionField(**kwargs):
 #     return models.TextField(default="", blank=True, **kwargs)
@@ -22,6 +23,7 @@ from .fields import DescriptionField
 def clean_xml_string(string):
     return re.sub(u'[^\u0020-\uD7FF\u0009\u000A\u000D\uE000-\uFFFD\U00010000-\U0010FFFF]+', '', string)
 
+registry = language_data.get('registry')
 
 class NextPrevMixin(models.Model):
     class Meta:
@@ -56,31 +58,49 @@ class FieldAttrModel(models.Model):
         return self.field_attr( field_name, "tag")
 
 
+def iana_subtag_choices(subtag_type, blank=True):
+    array = sorted( 
+        [(language['Subtag'],language['Description'][0]) for language in filter(lambda x: x['Type'] == subtag_type, registry) ],
+        key=lambda x: x[1],
+    )
+    if blank:
+        array = [("","")] + array
+    return array
+
+
 class Language(NextPrevMixin, FieldAttrModel, models.Model):
     tag = DescriptionField(
         docs="https://www.w3.org/International/articles/language-tags/index.en",
         help_text="The tag for this language. This is generated from the other fields and should not be edited manually."
     )
-    language_subtag = DescriptionField(
-        help_text="The IANA-registered code for the language. Written in lower case.",
-        docs='https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry',
+    language_subtag = CharField(
+        max_length=31,
+        help_text="The IANA-registered code for the language.",
+        docs='https://www.w3.org/International/articles/language-tags/index.en#language',
         validators=[RegexValidator(r"^[a-z]+$", message='The language code must be written in lower case.', code='language_subtag')],
         blank=False,
+        choices=iana_subtag_choices("language", blank=False),
     )
-    extlang = DescriptionField(
+    extlang = CharField(
+        max_length=31,
         help_text="The extended language subtag.",
-        docs='https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry',
-        validators=[RegexValidator(r"^[a-z]*$", message='The extended language subtag must be written in lower case.', code='invalid_extlang')]
+        docs='https://www.w3.org/International/articles/language-tags/index.en#extlang',
+        validators=[RegexValidator(r"^[a-z]*$", message='The extended language subtag must be written in lower case.', code='invalid_extlang')],
+        choices=iana_subtag_choices("extlang"),
     )
-    script = DescriptionField(
+    script = CharField(
+        max_length=31,
         help_text="The script subtag. Omit unless making a necessary distinction.",
-        docs='https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry',
-        validators=[RegexValidator(r"[A-Z][a-z]{3}$", message='The script is four characters long with the first character uppercase.', code='invalid_script')]
+        docs='https://www.w3.org/International/articles/language-tags/index.en#script',
+        validators=[RegexValidator(r"[A-Z][a-z]{3}$", message='The script is four characters long with the first character uppercase.', code='invalid_script')],
+        choices=iana_subtag_choices("script"),
     )
-    region = DescriptionField(
+    region = CharField(
+        max_length=31,
         help_text="The two-letter ISO 3166 country code or the 3-digit UN M.49 region code.",
-        docs='https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry',
-        validators=[RegexValidator(r"^[A-Z]{2}|\d{3}$", message='Not a valid two-letter ISO 3166 country code or 3-digit UN M.49 region code.', code='invalid_region')]
+        docs='https://www.w3.org/International/articles/language-tags/index.en#region',
+        validators=[RegexValidator(r"^[A-Z]{2}|\d{3}$", message='Not a valid two-letter ISO 3166 country code or 3-digit UN M.49 region code.', code='invalid_region')],
+        choices=iana_subtag_choices("region"),
     )
     description = DescriptionField(
         help_text="A description of this language.",
@@ -675,12 +695,12 @@ class ContentItem(XMLModel, TextLangModel, ReferenceModel, TimeStampedModel, mod
     rubric = DescriptionField(
         tag="rubric", 
         docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#mscorie", 
-        help_text="the text of any rubric or heading attached to a particular content item.",
+        help_text="The text of any rubric or heading attached to a particular content item.",
     )
     incipit = DescriptionField(
         tag="incipit", 
         docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#mscorie", 
-        help_text="the text of any rubric or heading attached to a particular content item.",
+        help_text="The text of any rubric or heading attached to a particular content item.",
     )
     quote = DescriptionField(
         tag="quote", 
@@ -695,7 +715,7 @@ class ContentItem(XMLModel, TextLangModel, ReferenceModel, TimeStampedModel, mod
     final_rubric = DescriptionField(
         tag="finalRubric", 
         docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#mscorie", 
-        help_text="the string of words that denotes the end of a text division, often with an assertion as to its author and title.",
+        help_text="The string of words that denotes the end of a text division, often with an assertion as to its author and title.",
     )
     colophon = DescriptionField(
         tag="colophon", 

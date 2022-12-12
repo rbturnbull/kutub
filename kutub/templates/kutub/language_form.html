@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static sekizai_tags kutub %}
+
+{% block content %}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css" rel="stylesheet" />
+
+
+    <div class="container mt-5 form-container" id='welcome_heading'>
+        <h1>{{ form_title }}</h1>
+        <div class="container">
+            <form action="" data-validate="" method="post">
+                {% include 'kutub/form_preamble.html' %}
+                <div class="form-row">
+                    {% grid_attribute_form form "description"  cols=12 %}
+                    {% grid_attribute_form form "language_subtag"  cols=6 %}
+                    {% grid_attribute_form form "extlang"  cols=6 %}
+                    {% grid_attribute_form form "script"  cols=6 %}
+                    {% grid_attribute_form form "region"  cols=6 %}
+                </div>    
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a href="../" class="btn btn-warning">Cancel</a>          
+            </form>
+        </div>
+    
+    </div>
+
+    {% addtoblock "js" %}
+        <!-- inventory/language_form.html js -->
+        {{ form.media.js }}
+    {% endaddtoblock js" %}
+
+{% endblock %}
