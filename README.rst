@@ -32,3 +32,14 @@ Install using pip:
 .. code-block:: bash
 
     pip install git+https://github.com/rbturnbull/kutub.git
+
+.. end-quickstart
+
+Credits 
+==================================
+
+.. start-credits
+
+- Robert Turnbull (Melbourne Data Analytics Platform, University of Melbourne)
+
+.. end-credits
