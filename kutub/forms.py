@@ -4,7 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column, HTML
 
 from django.forms.models import inlineformset_factory
-from django_superform.forms import SuperModelFormMixin
+from django_superform.forms import SuperModelFormMixin, SuperModelFormMetaclass
 from django_superform import InlineFormSetField
 
 from language_tags import data as language_data
@@ -48,7 +48,7 @@ class ModelFormWithInlineFormsetMixin(object):
         return ret
 
 
-class SuperModelForm( ModelFormWithInlineFormsetMixin, SuperModelFormMixin, forms.ModelForm ):
+class SuperModelForm(ModelFormWithInlineFormsetMixin, SuperModelFormMixin, forms.ModelForm, metaclass=SuperModelFormMetaclass):
     pass
 
 
