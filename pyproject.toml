@@ -6,14 +6,14 @@ authors = ["Robert Turnbull <robert.turnbull@unimelb.edu.au>"]
 license = "Apache 2.0"
 
 [tool.poetry.dependencies]
-python = "^3.8"
-Django = "^3.0.0"
-django-cms = "^3.8.0"
-django-publications = {git = "https://gitlab.unimelb.edu.au/rturnbull/django-publications.git"}
-lxml = "^4.6.3"
+python = ">=3.10,<4.0"
+Django = ">=3.0.0"
+django-cms = ">=3.8.0"
+django-publications = {git = "https://github.com/rbturnbull/django-publications.git"}
+lxml = ">=4.6.3"
 django-next-prev = "^1.1.0"
 django-reversion = "^4.0.0"
-django-superform = {git = "https://github.com/Chirurgus/django-superform"}
+django-superform4 = {git = "https://github.com/panatale1/django-superform.git", branch = "version-upgrade"}
 django-pandas = "^0.6.4"
 django-partial-date = {git = "https://github.com/rbturnbull/django_partial_date.git"}
 django-watson = "^1.5.5"
@@ -22,6 +22,11 @@ openpyxl = "^3.0.9"
 django-tagulous = "^1.3.0"
 django-select2 = "^7.7.3"
 language-tags = "^1.1.0"
+pytest-django = ">=4.9.0"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+DJANGO_SETTINGS_MODULE = "tests.settings"
 
 [tool.poetry.dev-dependencies]
 coverage = "^5.5"
