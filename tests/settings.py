@@ -35,3 +35,5 @@ DATABASES = {
 SITE_ID = 1
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 ROOT_URLCONF = "tests.urls"
+
+USE_TZ = False  # Change to True if you want timezone support
