@@ -670,14 +670,17 @@ bcrypt = ["bcrypt"]
 
 [[package]]
 name = "django-crispy-forms"
-version = "1.14.0"
+version = "2.3"
 description = "Best way to have Django DRY forms"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "django-crispy-forms-1.14.0.tar.gz", hash = "sha256:35887b8851a931374dd697207a8f56c57a9c5cb9dbf0b9fa54314da5666cea5b"},
-    {file = "django_crispy_forms-1.14.0-py3-none-any.whl", hash = "sha256:bc4d2037f6de602d39c0bc452ac3029d1f5d65e88458872cc4dbc01c3a400604"},
+    {file = "django_crispy_forms-2.3-py3-none-any.whl", hash = "sha256:efc4c31e5202bbec6af70d383a35e12fc80ea769d464fb0e7fe21768bb138a20"},
+    {file = "django_crispy_forms-2.3.tar.gz", hash = "sha256:2db17ae08527201be1273f0df789e5f92819e23dd28fec69cffba7f3762e1a38"},
 ]
+
+[package.dependencies]
+django = ">=4.2"
 
 [[package]]
 name = "django-extensions"
@@ -780,17 +783,17 @@ resolved_reference = "94c5eb283ea97f9f7c2c4c3619b18df1737fd50d"
 
 [[package]]
 name = "django-reversion"
-version = "4.0.2"
+version = "5.1.0"
 description = "An extension to the Django web framework that provides version control for model instances."
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.8"
 files = [
-    {file = "django-reversion-4.0.2.tar.gz", hash = "sha256:5d33ba944dbf19c7030c9e70e3731248ae34368cf2afede10e0d08fbf89e6f8c"},
-    {file = "django_reversion-4.0.2-py3-none-any.whl", hash = "sha256:095ec684626a07b48a1a32640e30cae93eb2acd3c452a9111f77ac934c2efb91"},
+    {file = "django_reversion-5.1.0-py3-none-any.whl", hash = "sha256:084d4f117d9e2b4e8dfdfaad83ebb34410a03eed6071c96089e6811fdea82ad3"},
+    {file = "django_reversion-5.1.0.tar.gz", hash = "sha256:3309821e5b6fceedcce6b6975f1a9c7fab6ae7c7d0e1276a90e345946fa0dcb8"},
 ]
 
 [package.dependencies]
-django = ">=2.0"
+django = ">=4.2"
 
 [[package]]
 name = "django-sekizai"
@@ -809,13 +812,13 @@ django-classy-tags = ">=3.0"
 
 [[package]]
 name = "django-select2"
-version = "7.11.1"
-description = "Select2 option fields for Django"
+version = "8.2.3"
+description = "This is a Django_ integration of Select2_."
 optional = false
-python-versions = "*"
+python-versions = ">=3.8"
 files = [
-    {file = "django-select2-7.11.1.tar.gz", hash = "sha256:6c56749ca5dd11be9a78a0861086973170c605ace27126c109f3d722cea3c32e"},
-    {file = "django_select2-7.11.1-py2.py3-none-any.whl", hash = "sha256:e558f79fd932fc9013a9dca5e680412403ad8b8a9b5b09754e97c8ce1849c4e1"},
+    {file = "django_select2-8.2.3-py3-none-any.whl", hash = "sha256:a3bc3f3bfb21d73791be1bc0dd8cc674d11e167129d605847c257942e7a2143b"},
+    {file = "django_select2-8.2.3.tar.gz", hash = "sha256:1de547c89ee2f005f1d461f76db89b440897939fcea894db8ba756b6f1ad36c1"},
 ]
 
 [package.dependencies]
@@ -847,13 +850,13 @@ resolved_reference = "29dfe7b8d39581602e419d39dd69fbf06bcf1acc"
 
 [[package]]
 name = "django-tagulous"
-version = "1.3.3"
+version = "2.1.0"
 description = "Fabulous Tagging for Django"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.8"
 files = [
-    {file = "django-tagulous-1.3.3.tar.gz", hash = "sha256:d445590ae1b5cb9b8c5a425f97bf5f01148a33419c19edeb721ebd9fdd6792fe"},
-    {file = "django_tagulous-1.3.3-py3-none-any.whl", hash = "sha256:ad3bb85f4cce83a47e4c0257143229cb92a294defa02fe661823b0442b35d478"},
+    {file = "django_tagulous-2.1.0-py3-none-any.whl", hash = "sha256:5ebba5a51f049f6df5f9d2a30eef431c0bf7cd35758aa0a42fc3351be4d239cd"},
+    {file = "django_tagulous-2.1.0.tar.gz", hash = "sha256:f629b54ad720052092785b0dce056dc6a68c7b63f8126075af9c25848b250bfd"},
 ]
 
 [package.dependencies]
@@ -2119,13 +2122,13 @@ files = [
 
 [[package]]
 name = "pydeck"
-version = "0.8.0"
+version = "0.9.1"
 description = "Widget for deck.gl maps"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "pydeck-0.8.0-py2.py3-none-any.whl", hash = "sha256:a8fa7757c6f24bba033af39db3147cb020eef44012ba7e60d954de187f9ed4d5"},
-    {file = "pydeck-0.8.0.tar.gz", hash = "sha256:07edde833f7cfcef6749124351195aa7dcd24663d4909fd7898dbd0b6fbc01ec"},
+    {file = "pydeck-0.9.1-py2.py3-none-any.whl", hash = "sha256:b3f75ba0d273fc917094fa61224f3f6076ca8752b93d46faf3bcfd9f9d59b038"},
+    {file = "pydeck-0.9.1.tar.gz", hash = "sha256:f74475ae637951d63f2ee58326757f8d4f9cd9f2a457cf42950715003e2cb605"},
 ]
 
 [package.dependencies]
@@ -3316,4 +3319,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<4.0"
-content-hash = "7555566281072ac6e0f77f32ba8b256a9c682bbd0f06d7a92c027c4fa3c3c704"
+content-hash = "09082cba3b689256958bce3b8208283dec4d27f639d95e163e8241b931dd4938"
