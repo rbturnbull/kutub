@@ -33,7 +33,23 @@ Install using pip:
 
     pip install git+https://github.com/rbturnbull/kutub.git
 
+Configuration
+==================================
+
+Add ``kutub`` to your ``INSTALLED_APPS`` setting:
+
+.. code-block:: python
+
+    INSTALLED_APPS = [
+        ...
+        'publications',
+        'kutub',
+    ]
+
+
 .. end-quickstart
+
+
 
 Credits 
 ==================================
