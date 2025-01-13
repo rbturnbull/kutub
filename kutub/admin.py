@@ -1,6 +1,5 @@
 from django.contrib import admin
 from reversion.admin import VersionAdmin
-from cms.admin.placeholderadmin import PlaceholderAdminMixin
 
 from . import models
 
