@@ -10,7 +10,7 @@ readme = "README.rst"
 python = ">=3.10,<4.0"
 Django = ">=3.0.0"
 django-cms = ">=3.8.0"
-django-publications = {git = "https://github.com/rbturnbull/django-publications.git"}
+publications = {git = "https://github.com/rbturnbull/django-publications.git"}
 lxml = ">=4.6.3"
 django-next-prev = ">=1.1.0"
 django-reversion = ">=4.0.0"

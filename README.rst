@@ -42,6 +42,8 @@ Add ``kutub`` to your ``INSTALLED_APPS`` setting:
 
     INSTALLED_APPS = [
         ...
+        "watson",
+        "reversion",
         "sekizai",
         "widget_tweaks",
         "django_select2",
@@ -56,6 +58,7 @@ Add the following to your ``urls.py``:
     urlpatterns = [
         ...
         path("select2/", include("django_select2.urls")),
+        path("publications/", include("publications.urls")),
         path("kutub/", include("kutub.urls")),
     ]
 
