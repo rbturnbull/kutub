@@ -25,6 +25,7 @@ django-select2 = ">=7.7.3"
 language-tags = ">=1.1.0"
 pydeck = ">=0.8.0"
 django-widget-tweaks = "^1.5.0"
+django-extensions = "^3.2.3"
 
 [tool.poetry.dev-dependencies]
 pytest-django = ">=4.9.0"
