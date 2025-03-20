@@ -269,15 +269,13 @@ def import_bischoff(manuscripts_excel, omeka_xml=None):
             )            
 
             if not empty_fields["Subject"]:
-                # tags = row['Subject'].split("@")
-                tags = []
-                tags.append("Bischoff Collection")
-                manuscript.tags = tags
+                tags = ["Bischoff Collection"]
+                tags.extend(row['Subject'].split("@"))                                
+                for tag in tags:
+                    manuscript.tags.add(tag)
 
             if not empty_fields["Language"]:
-                interpret_text_language( manuscript, row['Language'] )
-
-            print(manuscript)
+                interpret_text_language( manuscript, row['Language'] )            
 
             if omeka:
                 items = omeka.xpath(f"./o:item[.//*[contains(text(), '{manuscript.identifier}')]]", namespaces={'o':'http://omeka.org/schemas/omeka-xml/v5'})
