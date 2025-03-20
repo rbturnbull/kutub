@@ -89,10 +89,33 @@ class ReadersTests(TestCase):
                 "description": "Italian",
                 "language_subtag_input": "ita",
                 "language_subtag": "it",
-            },            
+            },
+            {
+                "description_input": "eng",
+                "description": "English",                
+                "language_subtag_input": "en",
+                "language_subtag": "en",
+            },
+            {
+                "description_input": "grc",
+                "description": "Ancient Greek (to 1453)",                
+                "language_subtag_input": "grc",
+                "language_subtag": "grc",
+            },
+            {
+                "description_input": "fre",
+                "description": "French",                
+                "language_subtag_input": "fr",
+                "language_subtag": "fr",
+            },
+            {
+                "description_input": "heb",
+                "description": "Hebrew",                
+                "language_subtag_input": "he",
+                "language_subtag": "he",
+            }            
         ]
-        for language in language_list:
-            print(language["description"])
+        for language in language_list:            
             readers.interpret_text_language(manuscript, language["description_input"])
             self.assertEqual(manuscript.main_language.language_subtag, language["language_subtag"])
             self.assertEqual(manuscript.main_language.description, language["description"])
@@ -114,6 +137,27 @@ class ReadersTests(TestCase):
         self.assertEqual(manuscript.other_languages.count(), 2)
         self.assertTrue(manuscript.other_languages.filter(language_subtag="la").exists())
         self.assertTrue(manuscript.other_languages.filter(language_subtag="fr").exists())
+
+        manuscript = models.Manuscript.objects.create(identifier="Test MS 5")
+        readers.interpret_text_language(manuscript, "latger")
+        self.assertIsNone(manuscript.main_language)        
+        self.assertEqual(manuscript.other_languages.count(), 2)
+        self.assertTrue(manuscript.other_languages.filter(language_subtag="la").exists())
+        self.assertTrue(manuscript.other_languages.filter(language_subtag="de").exists())
+
+        manuscript = models.Manuscript.objects.create(identifier="Test MS 6")
+        readers.interpret_text_language(manuscript, "lateng")
+        self.assertIsNone(manuscript.main_language)        
+        self.assertEqual(manuscript.other_languages.count(), 2)
+        self.assertTrue(manuscript.other_languages.filter(language_subtag="la").exists())
+        self.assertTrue(manuscript.other_languages.filter(language_subtag="en").exists())
+
+        manuscript = models.Manuscript.objects.create(identifier="Test MS 7")
+        readers.interpret_text_language(manuscript, "latdut")
+        self.assertIsNone(manuscript.main_language)        
+        self.assertEqual(manuscript.other_languages.count(), 2)
+        self.assertTrue(manuscript.other_languages.filter(language_subtag="la").exists())
+        self.assertTrue(manuscript.other_languages.filter(language_subtag="nl").exists())
         
         # Test invalid language (should raise exception)
         manuscript = models.Manuscript.objects.create(identifier="Test MS 5")
