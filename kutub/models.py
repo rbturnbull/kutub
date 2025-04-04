@@ -300,7 +300,6 @@ class Repository(XMLModel, ReferenceModel, IdentifierModel):
     def has_coords(self):
         return self.latitude is not None and self.longitude is not None
 
-
 class Manuscript(XMLModel, TextLangModel, ReferenceModel, IdentifierModel):
     """
     
@@ -312,6 +311,12 @@ class Manuscript(XMLModel, TextLangModel, ReferenceModel, IdentifierModel):
         tag="head", 
         docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msdo", 
         help_text="A brief description of the manuscript (for example, the title)."
+    )
+    order = models.PositiveIntegerField(
+        default=0,       
+        blank=True,
+        null=True,           
+        help_text="The order in which this manuscript should be displayed."
     )
     identifier = models.CharField(max_length=255, help_text="The identifier of the manuscript.")
     alt_identifier = models.CharField(max_length=255, default="", blank=True, help_text="An alternative identifier of the manuscript.")
@@ -336,6 +341,11 @@ class Manuscript(XMLModel, TextLangModel, ReferenceModel, IdentifierModel):
     )
     iiif_manifest_url = DescriptionField( help_text="A URL to a IIIF manifest with facsimiles of this manuscript.", verbose_name="IIIF Manifest URL" )
     # Physical Description
+    physical_description_summary = DescriptionField(
+        tag="p",
+        docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msph",
+        help_text="A summary of the physical description of the manuscript.",
+    )
     support_description = DescriptionField(
         tag="supportDesc",
         docs="https://tei-c.org/release/doc/tei-p5-doc/en/html/MS.html#msph1sup",
