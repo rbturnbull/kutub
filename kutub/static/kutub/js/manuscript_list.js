@@ -21,8 +21,7 @@ const linkRenderer = (params) => {
 }
 
 const sourceRenderer = (params) => {
-  if(params.value){
-    console.log(params)
+  if(params.value){    
     const a = document.createElement("a");
     a.href = params.value;
     a.textContent = "Source";
@@ -33,6 +32,7 @@ const sourceRenderer = (params) => {
 }
 
 const setupManuscriptList= (manuscripts = []) => {  
+  console.log('setting up table');
   let rowData = [];
   manuscripts.forEach(manuscript => {
       rowData.push(manuscript);
@@ -40,12 +40,13 @@ const setupManuscriptList= (manuscripts = []) => {
   const gridOptions = {
       rowData: rowData,
       columnDefs: [
-          { field: "heading", flex: 1, cellRenderer: linkRenderer},
+          { field: "heading", flex: 1, cellRenderer: linkRenderer, rowDrag: true},
           { field: "identifier", flex: 1 },                  
           { field: "internal identifier", flex: 1},
           { field: "repository", flex: 1, cellRenderer: linkRenderer},
           { field: "source", flex: 1, cellRenderer: sourceRenderer}
-      ]        
+      ],
+      rowDragManaged: true,       
   };
   const myGridElement = document.querySelector('#manuscript-manage-grid');
   let gridApi = agGrid.createGrid(myGridElement, gridOptions);
