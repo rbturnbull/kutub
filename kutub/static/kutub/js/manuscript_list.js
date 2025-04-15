@@ -1,18 +1,25 @@
-const deleteAssetButton = (params) => {    
-  const link = document.createElement('a');
-  link.innerHTML = '<i class="fa-solid fa-trash-can" style="color: red;"></i>';
-  link.href= params.value;
-  return link;
-}
+const getNumber = (str) => {
+  const match = str && str.match(/\d+/);
+  return match ? parseInt(match[0], 10) : null;
+};
 
-const dateSorter = (date1Str, date2Str) => {
-  const date1 = Date.parse(date1Str);
-  const date2 = Date.parse(date2Str);    
-  if(date1 === null && date2 === null) return 0;
-  if(date1 === null) return -1;
-  if(date2 === null) return 1;    
-  return date1 - date2;    
-}
+const identifierSorter = (id1, id2) => {
+  // Extract numbers from the identifiers if they exist  
+  
+  const num1 = getNumber(id1);
+  const num2 = getNumber(id2);
+  
+  // If both have numbers, compare numerically
+  if (num1 !== null && num2 !== null) {
+    return num1 - num2;
+  }
+  // If only one has a number, prioritize the one with a number
+  if (num1 !== null) return -1;
+  if (num2 !== null) return 1;
+  
+  // Otherwise, compare alphabetically
+  return (id1 || '').localeCompare(id2 || '');
+};
 
 const linkRenderer = (params) => {  
   const span = document.createElement("span");
@@ -41,15 +48,16 @@ const setupManuscriptList= (manuscripts = []) => {
       rowData: rowData,
       columnDefs: [
           { field: "heading", flex: 1, cellRenderer: linkRenderer, rowDrag: true},
-          { field: "identifier", flex: 1 },                  
+          { field: "identifier", flex: 1, comparator: identifierSorter },                  
           { field: "internal identifier", flex: 1},
           { field: "repository", flex: 1, cellRenderer: linkRenderer},
-          { field: "source", flex: 1, cellRenderer: sourceRenderer}
+          { field: "source", flex: 1, cellRenderer: sourceRenderer},          
       ],
       rowDragManaged: true,       
-  };
+  };    
   const myGridElement = document.querySelector('#manuscript-manage-grid');
-  let gridApi = agGrid.createGrid(myGridElement, gridOptions);
+  let gridApi = agGrid.createGrid(myGridElement, gridOptions);  
+  
   let searchInput = document.querySelector('#manuscript-search');
   searchInput.addEventListener("input", (e) => {
       let query = e.target.value;
