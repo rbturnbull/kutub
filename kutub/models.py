@@ -303,21 +303,12 @@ class Repository(XMLModel, ReferenceModel, IdentifierModel):
 
 class ManuscriptManager(models.Manager):
     def get_queryset(self):
-
-        queryset = super().get_queryset()
-        results = list(queryset)
-
-        def extract_number(item):            
-            match = re.search(r'(\d+)', item.identifier)
-            if match:
-                return int(match.group(1))
-            return 0
-        
-        return sorted(results, key=lambda x: (
-            x.repository_id or 0,
-            extract_number(x),
-            x.alt_identifier or "",
-        ))
+        return super().get_queryset().order_by(
+            'repository',
+            'order',
+            'identifier',
+            'alt_identifier'
+        )
 
 class Manuscript(XMLModel, TextLangModel, ReferenceModel, IdentifierModel):
     """
