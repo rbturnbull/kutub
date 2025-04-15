@@ -16,43 +16,29 @@
 
   <h2>Manuscripts</h2>
 
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Manuscript</th>
-        <th scope="col">Repository</th>
-        <!--
-        <th scope="col">Date <span style='font-variant: small-caps;'>ce</span></th>
-        <th scope="col">Languages</th>
-        <th scope="col">Scripts</th>
-        <th scope="col">Dimensions</th>
-        -->
-      </tr>
-    </thead>
-    <tbody>
-      {% for manuscript in page_obj %}
-      <tr>
-        <th scope="row"><a href="{{ manuscript.get_absolute_url }}">{{ manuscript }}</a></th>
-        <td><a href="{{ manuscript.repository.get_absolute_url }}">{{ manuscript.repository }}</a></td>
-        <!--
-        <td>{{ manuscript.date }}</td>
-        <td>
-          {% for language in manuscript.languages.all %}
-          <a href='{{language.get_absolute_url}}' class="badge badge-primary">{{language}}</a>
-          {% endfor %}
-        </td>
-        <td>
-          {% for script in manuscript.scripts.all %}
-          <a href='{{script.get_absolute_url}}' class="badge badge-primary">{{script}}</a>
-          {% endfor %}
-        </td>
-        <td>{{ manuscript|dimensions }}</td>
-        -->
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% include 'kutub/pagination.html' %}
+  <div>
+    <span>Quick search</span>
+    <input type="text" id="manuscript-search" class="form-control w-120" placeholder="Search..."/>
+  </div>    
+
+  <div id="manuscript-manage-grid" class="ag-theme-quartz w-100" style="height:800px; margin-top: 3em"></div>  
+
+  <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
+  <script type="module">
+      import {setupManuscriptList} from '{% static "kutub/js/manuscript_list.js" %}';
+      const manuscripts = [
+        {% for manuscript in object_list %}
+        {          
+          "heading": '<a href="{{ manuscript.get_absolute_url }}">{{ manuscript }}</a>',
+          "identifier": "{{manuscript.alt_identifier}}",
+          "repository": '<a href="{{ manuscript.repository.get_absolute_url }}">{{ manuscript.repository }}</a>',
+          "source": "{{manuscript.url}}"
+        },
+        {% endfor %}
+      ]
+      setupManuscriptList(manuscripts);
+  </script>
+
 </div>
 
 {% endblock %}
