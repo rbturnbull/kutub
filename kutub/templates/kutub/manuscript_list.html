@@ -30,7 +30,8 @@
         {% for manuscript in object_list %}
         {          
           "heading": '<a href="{{ manuscript.get_absolute_url }}">{{ manuscript }}</a>',
-          "identifier": "{{manuscript.alt_identifier}}",
+          "identifier": "{{manuscript.identifier}}",
+          "internal identifier": "{{manuscript.alt_identifier}}",
           "repository": '<a href="{{ manuscript.repository.get_absolute_url }}">{{ manuscript.repository }}</a>',
           "source": "{{manuscript.url}}"
         },

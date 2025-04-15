@@ -42,6 +42,7 @@ const setupManuscriptList= (manuscripts = []) => {
       columnDefs: [
           { field: "heading", flex: 1, cellRenderer: linkRenderer},
           { field: "identifier", flex: 1 },                  
+          { field: "internal identifier", flex: 1},
           { field: "repository", flex: 1, cellRenderer: linkRenderer},
           { field: "source", flex: 1, cellRenderer: sourceRenderer}
       ]        
