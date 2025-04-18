@@ -75,7 +75,7 @@ class ManuscriptView(PermissionRequiredMixin):
 
 
 class ManuscriptListView(ManuscriptView, ListView):
-    paginate_by = PAGINATION
+    paginate_by = None
     extra_context = dict(title="Manuscript List")
 
 
