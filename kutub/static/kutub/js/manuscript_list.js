@@ -28,12 +28,17 @@ const linkRenderer = (params) => {
 }
 
 const sourceRenderer = (params) => {
-  if(params.value){    
+  if(params.value){
+    const div = document.createElement("div");        
     const a = document.createElement("a");
     a.href = params.value;
-    a.textContent = "Source";
-    a.target = "_blank";
-    return a;
+    a.innerHTML = '<i class="fas fa-external-link-alt"></i>';
+    a.target = "_blank";    
+    div.append(a);
+    div.style.display = "flex";
+    div.style.alignItems = "center";
+    div.style.height = "100%";
+    return div;
   }
   return "";
 }
@@ -48,8 +53,7 @@ const setupManuscriptList= (manuscripts = []) => {
       rowData: rowData,
       columnDefs: [
           { field: "heading", flex: 1, cellRenderer: linkRenderer, rowDrag: true},
-          { field: "identifier", flex: 1, comparator: identifierSorter },                  
-          { field: "internal identifier", flex: 1},
+          { field: "identifier", flex: 1, comparator: identifierSorter },                            
           { field: "repository", flex: 1, cellRenderer: linkRenderer},
           { field: "source", flex: 1, cellRenderer: sourceRenderer},          
       ],
